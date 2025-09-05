@@ -1,0 +1,77 @@
+{
+  "parserOptions": {
+    "project": "./tsconfig.json"
+  },
+  "ignorePatterns": [
+    "tailwind.config.js",
+    "postcss.config.js",
+    "vite.config.ts",
+    "env.ts",
+    "tsconfig.json",
+    "openapi-config.cts",
+    "src/services/code-gen/**/*.ts",
+    "src/services/**/index.ts",
+    "json-server/**"
+  ],
+  "extends": [
+    "airbnb",
+    "airbnb-typescript",
+    "airbnb/hooks",
+    "plugin:tailwindcss/recommended",
+    "prettier"
+  ],
+  "plugins": ["tailwindcss", "sort-destructure-keys"],
+  "rules": {
+    "import/order": [
+      "error",
+      {
+        "alphabetize": {
+          "order": "asc"
+        },
+        "pathGroups": [
+          {
+            "pattern": "assets/**",
+            "group": "builtin"
+          },
+          {
+            "pattern": "@/**",
+            "group": "internal"
+          }
+        ],
+        "groups": [
+          ["builtin", "external", "type"],
+          ["internal", "parent", "sibling", "index", "object"]
+        ],
+        "newlines-between": "always"
+      }
+    ],
+    "import/prefer-default-export": "off",
+    "react/jsx-filename-extension": ["warn", { "extensions": [".tsx"] }],
+    "import/extensions": "off",
+    "react/react-in-jsx-scope": "off",
+    "no-console": ["error", { "allow": ["warn", "error"] }],
+    "no-param-reassign": ["error", { "props": false }],
+    "react/function-component-definition": [
+      "error",
+      {
+        "namedComponents": "arrow-function"
+      }
+    ],
+    "import/no-extraneous-dependencies": "off",
+    "react/jsx-sort-props": "error",
+    "react/require-default-props": "off",
+    "react/jsx-key": "error",
+    "sort-destructure-keys/sort-destructure-keys": [
+      "error",
+      {
+        "caseSensitive": false
+      }
+    ],
+    "react/button-has-type": "off",
+    "react/jsx-props-no-spreading": "off",
+    "no-shadow": "off",
+    "@typescript-eslint/no-shadow": "off",
+    "jsx-a11y/label-has-associated-control": "off",
+    "jsx-a11y/click-events-have-key-events": "off"
+  }
+}

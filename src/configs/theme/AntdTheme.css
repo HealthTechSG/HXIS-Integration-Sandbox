@@ -1,0 +1,71 @@
+/*
+Use this file to customize global theme style if Ant Design's design token 
+is not enough to customize what you need.
+
+Project is configured with tailwind, so tailwind @apply can be used.
+Project is configured with postcss-nesting, so css styles can be nested.
+*/
+#app {
+  h1.ant-typography,
+  h2.ant-typography,
+  h3.ant-typography,
+  h4.ant-typography,
+  h5.ant-typography,
+  h6.ant-typography {
+    /* Antd unable to set separate font for title and body. */
+    /* Workaround: Set body as global default, then overwrite the title font. */
+    font-family: 'Montserrat', sans-serif;
+  }
+
+  .ant-card-head .ant-tabs-nav {
+    /* Antd bug: for middle and small size tab, the border-bottom is not visible. */
+    /* Workaround: Move it up by 1px. */
+    top: -1px;
+  }
+
+  .ant-layout-sider .ant-menu {
+    @apply font-bold;
+  }
+
+  .ant-notification-notice .ant-notification-notice-message {
+    @apply font-bold;
+  }
+
+  .ant-spin-nested-loading .ant-spin-spinning {
+    /* Add a darkened overlay */
+    @apply bg-black bg-opacity-15;
+
+    /* Remove the max-height */
+    @apply max-h-max;
+  }
+
+  .ant-collapse-header {
+    @apply font-bold;
+  }
+
+  .ant-pagination {
+    @apply justify-center;
+
+    .ant-pagination-total-text {
+      @apply absolute left-0;
+    }
+
+    .ant-pagination-options {
+      @apply absolute right-0;
+    }
+  }
+
+  .ant-descriptions-view {
+    th.ant-descriptions-item {
+      @apply pb-0;
+    }
+
+    span.ant-descriptions-item-label {
+      @apply text-xs;
+    }
+
+    span.ant-descriptions-item-content {
+      @apply text-base;
+    }
+  }
+}

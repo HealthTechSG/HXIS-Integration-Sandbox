@@ -1,0 +1,22 @@
+{
+  "# Comment": [
+    "-------------------------------------------------------------------------",
+    "This file is used for sharing common project-specific settings of the VS Code.",
+    "Settings here should only be related to the project, ",
+    "(eg: IDE env standardization, or project-preferred plugin settings etc.)",
+    "-------------------------------------------------------------------------"
+  ],
+
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.rulers": [80, 100],
+
+  "# Tailwind ESLint Fix": [
+    "-------------------------------------------------------------------------",
+    "Reference - https://github.com/tailwindlabs/tailwindcss/discussions/5258#discussioncomment-1979394"
+  ],
+  "css.customData": [".vscode/tailwind.json"],
+  "[dotenv]": {
+    "editor.defaultFormatter": "foxundermoon.shell-format"
+  }
+}

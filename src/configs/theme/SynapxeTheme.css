@@ -1,0 +1,59 @@
+/* Pre-configured Synapxe theme */
+@import './TailwindThemeBase.css';
+
+/* 
+Synapxe brand constants 
+Synapxe Reference - https://healthsg.sharepoint.com/sites/Synapxe/SitePages/Corporate%20Communications/Communications-Portal.aspx?OR=Teams-HL&CT=1708403190072&clickparams=eyJBcHBOYW1lIjoiVGVhbXMtRGVza3RvcCIsIkFwcFZlcnNpb24iOiIyNy8yNDAxMDQxNzUwMyIsIkhhc0ZlZGVyYXRlZFVzZXIiOmZhbHNlfQ%3D%3D
+*/
+:root {
+  /* Font family */
+  --title-font: 'Montserrat', sans-serif;
+  --body-font: 'Open Sans', sans-serif;
+
+  /* Color palette */
+  --syn-primary-purple: #5b0df5;
+  --syn-primary-fuchsia: #ff00ff;
+  --syn-primary-fuchsia-light: #ffaaff;
+  --syn-primary-fuchsia-lighter: #ffccff;
+  --syn-primary-fuchsia-dark: #dd00dd;
+
+  --syn-secondary-navy: #0b0c5c;
+  --syn-secondary-sky: #3f7cf5;
+  --syn-secondary-turquoise: #2fb7f4;
+  --syn-secondary-lavender: #bf5af5;
+  --syn-secondary-lavender-light: #cdaeff;
+  --syn-secondary-aqua: #6aeff3;
+  --syn-secondary-lilac: #e8eafd;
+  --syn-secondary-lilac-dark: #d8daed;
+}
+
+/* -------------------------------------------------------------------------- */
+/* App Theme */
+/* -------------------------------------------------------------------------- */
+/* Global */
+body {
+  font-family: var(--body-font);
+  background-color: var(--syn-secondary-lilac);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--title-font);
+}
+
+/* Layout */
+header#rootLayoutHeader {
+  background: var(--syn-primary-fuchsia);
+  background: linear-gradient(
+    45deg,
+    var(--syn-primary-purple) 0%,
+    var(--syn-primary-purple) 20%,
+    var(--syn-primary-fuchsia) 100%
+  );
+}
+
+/* -------------------------------------------------------------------------- */
