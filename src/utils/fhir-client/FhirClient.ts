@@ -9,9 +9,9 @@ import type {
 } from './FhirClientTypes';
 import { Bundle, Resource } from 'fhir/r5';
 import FHIR from 'fhirclient';
-import { isEmpty } from 'lodash-es';
+// import { isEmpty } from 'lodash-es';
 import { User } from 'oidc-client-ts';
-import queryString from 'query-string';
+// import queryString from 'query-string';
 
 //* Util -----------------------------------------------------------------------
 const FhirClient = (serverUrl: string) => {
@@ -48,12 +48,26 @@ const FhirClient = (serverUrl: string) => {
   //* Resource Search ----------------------------------------------------------
   const searchResource = async <T = Resource>({
     filters = {},
-    page,
-    pageSize,
+    //page,
+    //pageSize,
     resourceType,
-    resultFields = [],
-    sortFields = [],
+    //resultFields = [],
+    //sortFields = [],
   }: SearchResourceProps) => {
+    // Construct the request body for form-encoded data
+    const searchParams = new URLSearchParams();
+    
+    // Add filters to the request body
+    Object.entries(filters).forEach(([key, value]) => {
+      if (value !== undefined && value !== null) {
+        searchParams.append(key, String(value));
+      }
+    });
+    
+    console.log('🟠 [FhirClient] Final request body being sent to FHIR API:', searchParams.toString());
+    console.log('🟠 [FhirClient] Request URL:', `${resourceType}/_search`);
+    console.log('🟠 [FhirClient] Original filters object:', filters);
+    
     const fetchProps = {
       url: `${resourceType}/_search`,
       method: 'POST',
@@ -62,17 +76,12 @@ const FhirClient = (serverUrl: string) => {
         ...(getApiKeyHeader() && getApiKeyHeader()),
         ...(getAccessTokenHeader() && getAccessTokenHeader()),
       },
-      body: queryString.stringify({
-        ...(pageSize && { _count: pageSize }),
-        ...(page && pageSize && { _skip: page * pageSize }),
-        ...filters,
-        ...(!isEmpty(sortFields) && { _sort: sortFields.join(',') }),
-        ...(!isEmpty(resultFields) && { _elements: resultFields.join(',') }),
-        _total: 'accurate',
-      }),
+      body: searchParams.toString()
     };
 
     const fhirResponse = await client.request<Bundle<T>>(fetchProps);
+
+    console.log('fhirResponse:', fhirResponse);
 
     return {
       entry: fhirResponse.entry?.map((entry) => entry.resource) as T[],
@@ -115,7 +124,16 @@ const FhirClient = (serverUrl: string) => {
         ...(getAccessTokenHeader() && getAccessTokenHeader()),
       },
     };
-    return client.create<T>(resourceBody, reqOptions);
+    
+    console.log('🔴 [FhirClient] About to create FHIR resource');
+    console.log('🔴 [FhirClient] Resource being created:', resourceBody);
+    console.log('🔴 [FhirClient] Request headers:', reqOptions.headers);
+    
+    const response = await client.create<T>(resourceBody, reqOptions);
+    
+    console.log('🔴 [FhirClient] Created resource response:', response);
+    
+    return response;
   };
 
   //* Resource Update ----------------------------------------------------------
@@ -128,7 +146,16 @@ const FhirClient = (serverUrl: string) => {
         ...(getAccessTokenHeader() && getAccessTokenHeader()),
       },
     };
-    return client.update<T>(resourceBody, reqOptions);
+    
+    console.log('🔴 [FhirClient] About to update FHIR resource');
+    console.log('🔴 [FhirClient] Resource being updated:', resourceBody);
+    console.log('🔴 [FhirClient] Request headers:', reqOptions.headers);
+    
+    const response = await client.update<T>(resourceBody, reqOptions);
+    
+    console.log('🔴 [FhirClient] Updated resource response:', response);
+    
+    return response;
   };
 
   //* Resource Delete ----------------------------------------------------------
@@ -159,7 +186,16 @@ const FhirClient = (serverUrl: string) => {
       body: JSON.stringify(bundle),
     };
 
-    return client.request(requestProps);
+    console.log('🔴 [FhirClient] About to make HTTP request to FHIR server');
+    console.log('🔴 [FhirClient] Request URL:', `${serverUrl}${requestProps.url}`);
+    console.log('🔴 [FhirClient] Request headers:', requestProps.headers);
+    console.log('🔴 [FhirClient] Request bundle being sent:', bundle);
+
+    const response = await client.request(requestProps);
+    
+    console.log('🔴 [FhirClient] HTTP response received from FHIR server:', response);
+    
+    return response;
   };
 
   // Return --------------------------------------------------------------------

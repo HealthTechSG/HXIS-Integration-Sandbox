@@ -24,11 +24,14 @@ const RtkFhirClient = (baseUrl: string) => {
     mapFn,
   }: SearchResourceProps<TFhirData, TResponseData>) => {
     try {
+      console.log('🟡 [RtkFhirClient] Body received from ObservationService:', body);
+      console.log('🟡 [RtkFhirClient] About to call fhirClient.searchResource with body:', body);
+      
       const fhirSearchResult = await fhirClient.searchResource<TFhirData>(body);
 
       // Transform the FhirPatient into the format we use.
-      const entry = fhirSearchResult.entry?.map((fhirData) => mapFn(fhirData));
-      const { total } = fhirSearchResult;
+      const entry = fhirSearchResult.entry?.map((fhirData) => mapFn(fhirData)) || [];
+      const total = fhirSearchResult.total || 0;
 
       const data = { entry, total } as SearchResourceResult<TResponseData>;
       return { data };
@@ -61,15 +64,21 @@ const RtkFhirClient = (baseUrl: string) => {
     mapResFn,
   }: CreateResourceProps<TRequestData, TFhirData, TResponseData>) => {
     try {
+      console.log('🟡 [RtkFhirClient] Input request data for createResource:', body);
+      
       const fhirRequestData = mapReqFn(body);
+      console.log('🟡 [RtkFhirClient] After mapReqFn transformation to FHIR Patient:', fhirRequestData);
 
       const fhirResponseData =
         await fhirClient.createResource<TFhirData>(fhirRequestData);
+      console.log('🟡 [RtkFhirClient] Raw FHIR response from server:', fhirResponseData);
 
       const data = mapResFn(fhirResponseData);
+      console.log('🟡 [RtkFhirClient] After mapResFn transformation back to app format:', data);
 
       return { data };
     } catch (error) {
+      console.log('🟡 [RtkFhirClient] Error occurred in createResource:', error);
       return { error: error as FetchBaseQueryError };
     }
   };
@@ -81,15 +90,21 @@ const RtkFhirClient = (baseUrl: string) => {
     mapResFn,
   }: UpdateResourceProps<TRequestData, TFhirData, TResponseData>) => {
     try {
+      console.log('🟡 [RtkFhirClient] Input request data for updateResource:', body);
+      
       const fhirRequestData = mapReqFn(body);
+      console.log('🟡 [RtkFhirClient] After mapReqFn transformation to FHIR Patient:', fhirRequestData);
 
       const fhirResponseData =
         await fhirClient.updateResource<TFhirData>(fhirRequestData);
+      console.log('🟡 [RtkFhirClient] Raw FHIR response from server:', fhirResponseData);
 
       const data = mapResFn(fhirResponseData);
+      console.log('🟡 [RtkFhirClient] After mapResFn transformation back to app format:', data);
 
       return { data };
     } catch (error) {
+      console.log('🟡 [RtkFhirClient] Error occurred in updateResource:', error);
       return { error: error as FetchBaseQueryError };
     }
   };
@@ -112,14 +127,21 @@ const RtkFhirClient = (baseUrl: string) => {
     mapResFn,
   }: PostBundleRequestProps<TRequestData, TResponseData>) => {
     try {
+      console.log('🟡 [RtkFhirClient] Input request data:', body);
+      
       const requestBundleData = mapReqFn(body);
+      console.log('🟡 [RtkFhirClient] After mapReqFn transformation to FHIR Bundle:', requestBundleData);
+      
       const responseBundleData =
         await fhirClient.postBundleRequest(requestBundleData);
+      console.log('🟡 [RtkFhirClient] Raw FHIR response from server:', responseBundleData);
 
       const data = mapResFn(responseBundleData);
+      console.log('🟡 [RtkFhirClient] After mapResFn transformation back to app format:', data);
 
       return { data };
     } catch (error) {
+      console.log('🟡 [RtkFhirClient] Error occurred:', error);
       return { error: error as FetchBaseQueryError };
     }
   };

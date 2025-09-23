@@ -4,7 +4,6 @@ import {
   Menu,
   Avatar,
   Button,
-  Tabs,
   Card,
   Table,
   Dropdown,
@@ -17,22 +16,12 @@ import {
   ConfigProvider,
 } from 'antd';
 import {
-  HomeOutlined,
-  ScheduleOutlined,
-  InboxOutlined,
-  FileTextOutlined,
-  UnorderedListOutlined,
-  BellOutlined,
-  UserOutlined,
-  DownOutlined,
-  SaveOutlined,
+  DownOutlined
 } from '@ant-design/icons';
 import type { ColumnsType } from 'antd/lib/table';
 import moment from 'moment';
 
-const { Header, Sider, Content } = Layout;
-const { TabPane } = Tabs;
-const { Option } = Select;
+const { Sider } = Layout;
 
 // --- (1) Data interfaces & dummy data ---------------------------------------
 interface Condition {
