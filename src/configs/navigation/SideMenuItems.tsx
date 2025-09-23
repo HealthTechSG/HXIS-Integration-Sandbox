@@ -5,9 +5,6 @@
  * This is to configure the items on the side menu.
  */
 import type { MenuProps } from 'antd';
-import { Link } from 'react-router-dom';
-
-import RouteMap from './RouteMap';
 
 type MenuItem = Required<MenuProps>['items'][number];
 
@@ -16,14 +13,20 @@ type MenuItem = Required<MenuProps>['items'][number];
 //* ----------------------------------------------------------------------------
 const SIDE_MENU_ITEMS: MenuItem[] = [
   {
-    key: RouteMap.PatientPaths.PatientList,
-    label: <Link to={RouteMap.PatientPaths.PatientList}>Patient List</Link>,
+    key: 'patient-list',
+    label: 'Patient List',
   },
   {
-    key: RouteMap.PatientPaths.PatientProfile,
-    label: (
-      <Link to={RouteMap.PatientPaths.PatientProfile}>Patient Profile</Link>
-    ),
+    key: 'practitioner-list',
+    label: 'Practitioner List',
+  },
+  {
+    key: 'location-list',
+    label: 'Location List',
+  },
+  {
+    key: 'list-list',
+    label: 'List Management',
   },
 ];
 

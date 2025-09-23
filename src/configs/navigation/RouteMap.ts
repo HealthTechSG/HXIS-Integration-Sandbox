@@ -15,8 +15,26 @@ const RouteMap = {
 
   //* Patient CRUD -------------------------------------------------------------
   PatientPaths: {
-    PatientList: '/patient',
-    PatientProfile: '/patient/:id',
+    PatientList: '/',
+    PatientProfile: '/:id',
+  },
+
+  //* Practitioner CRUD --------------------------------------------------------
+  PractitionerPaths: {
+    PractitionerList: '/practitioner',
+    PractitionerProfile: '/practitioner/:id',
+  },
+
+  //* Location CRUD ------------------------------------------------------------
+  LocationPaths: {
+    LocationList: '/location',
+    LocationProfile: '/location/:id',
+  },
+
+  //* List CRUD ----------------------------------------------------------------
+  ListPaths: {
+    ListList: '/list',
+    ListProfile: '/list/:id',
   },
 
   //* Education CRUD -----------------------------------------------------------

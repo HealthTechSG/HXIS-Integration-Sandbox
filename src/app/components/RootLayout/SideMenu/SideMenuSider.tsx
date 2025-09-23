@@ -15,7 +15,14 @@ const SideMenuSider: React.FC = () => {
   const getMenuKeyFromPath = (pathname: string): string => {
     // Remove any trailing slashes
     const cleanedPathname = pathname.replace(/\/$/, '');
-    // Return the pathname as the key
+    
+    // Check for specific route patterns
+    if (cleanedPathname.startsWith('/patient/') && cleanedPathname !== '/patient') {
+      // If it's a patient profile route (/patient/123), return the pattern
+      return '/patient/:id';
+    }
+    
+    // Return the pathname as the key for other routes
     return cleanedPathname || '/';
   };
 

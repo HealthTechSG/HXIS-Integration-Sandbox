@@ -15,9 +15,9 @@ const LoginLayout: React.FC<PublicRootLayoutProps> = ({
   className,
   ...props
 }) => (
-  <Layout className={twMerge('min-h-screen', className)} {...props}>
+  <Layout className={twMerge('min-h-screen flex flex-col', className)} {...props}>
     <LayoutHeader />
-    <Content className="p-4">{children}</Content>
+    <Content className="flex-1">{children}</Content>
   </Layout>
 );
 

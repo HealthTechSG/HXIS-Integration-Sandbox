@@ -32,7 +32,7 @@ const PrivateRootLayout: React.FC<PrivateRootLayoutProps> = ({
           isMobile={isMobile}
         />
 
-        <Content>{children}</Content>
+        <Content className='bg-[#93d4ff]'>{children}</Content>
       </Layout>
     </Layout>
   );

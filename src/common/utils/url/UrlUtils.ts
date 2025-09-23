@@ -1,5 +1,15 @@
 const UrlUtils = {
-  getBaseUrl: () => `/`,
+  getBaseUrl: () => {
+    const appId = import.meta.env.VITE_APP_ID || '';
+    
+    // In production, use /apps prefix
+    if (import.meta.env.PROD) {
+      return `/apps/${appId}`;
+    }
+    
+    // In development, keep simple basename
+    return '/';
+  },
   getApiUrl: () => import.meta.env.VITE_FHIR_API_BASE_URL,
 
   /**

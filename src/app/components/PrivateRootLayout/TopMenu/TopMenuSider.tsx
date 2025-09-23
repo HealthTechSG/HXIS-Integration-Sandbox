@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { MenuOutlined, UserOutlined } from '@ant-design/icons';
+import { MenuOutlined } from '@ant-design/icons';
 import { Grid, Menu, Button, Drawer, Typography } from 'antd';
 import { PUBLIC_TOP_MENU_ITEMS } from '@/configs';
 
