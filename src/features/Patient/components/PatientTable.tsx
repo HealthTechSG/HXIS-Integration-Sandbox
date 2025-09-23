@@ -1,177 +1,317 @@
-import { Table } from 'antd';
-import React from 'react';
+import React, { useMemo, useState } from 'react';
 
-const columns = [
-  {
-    title: 'Patient ID',
-    dataIndex: ['resource', 'id'],
-    key: 'id',
-  },
-  {
-    title: 'Name',
-    dataIndex: ['resource', 'name', 0, 'text'],
-    key: 'name',
-  },
-  {
-    title: 'Identifier',
-    dataIndex: ['resource', 'identifier', 0, 'value'],
-    key: 'identifier',
-  },
-  {
-    title: 'Gender',
-    dataIndex: ['resource', 'gender'],
-    key: 'gender',
-  },
-  {
-    title: 'Birth Date',
-    dataIndex: ['resource', 'birthDate'],
-    key: 'birthDate',
-  },
-  {
-    title: 'Phone',
-    key: 'phone',
-    render: (_: any, record: any) => {
-      const phone = record.resource.telecom.find(
-        (t: any) => t.system === 'phone',
-      );
-      return phone?.value || '—';
-    },
-  },
-  {
-    title: 'Email',
-    key: 'email',
-    render: (_: any, record: any) => {
-      const email = record.resource.telecom.find(
-        (t: any) => t.system === 'email',
-      );
-      return email?.value || '—';
-    },
-  },
-  {
-    title: 'Address',
-    key: 'address',
-    render: (_: any, record: any) => {
-      const addr = record.resource.address[0];
-      return addr ? `${addr.line.join(', ')}, ${addr.postalCode}` : '—';
-    },
-  },
-  {
-    title: 'Last Updated',
-    dataIndex: ['resource', 'meta', 'lastUpdated'],
-    key: 'lastUpdated',
-  },
-];
+import { 
+  DeleteOutlined,
+  EditOutlined,
+  FileTextOutlined,
+  SearchOutlined,
+  UserOutlined, 
+} from '@ant-design/icons';
+import { Avatar, Button, Input, Modal, Space, Spin, Table, Typography, message } from 'antd';
+import moment from 'moment';
 
-const data = [
-  {
-    fullUrl:
-      'http://fhirapi.healthx.sg/Patient/3A7D84520EE64DEB950A79524094EE7C',
-    resource: {
-      resourceType: 'Patient',
-      id: '3A7D84520EE64DEB950A79524094EE7C',
-      meta: {
-        versionId: '1',
-        lastUpdated: '2025-06-11T09:55:32.823+08:00',
+import { useGetPatientListQuery, useDeletePatientMutation } from '@/services/Patient/PatientService';
+import { useTabs } from '@/common/hooks/useTabs';
+
+const { Text } = Typography;
+
+interface PatientTableProps {
+  searchQuery?: string;
+  department?: string;
+  provider?: string;
+  status?: string;
+  onEditPatient?: (patient: any) => void;
+}
+
+
+
+const PatientTable: React.FC<PatientTableProps> = ({
+  searchQuery = '',
+  // department = 'all',
+  // provider = 'all',
+  // status = 'all'
+  onEditPatient,
+}) => {
+  const { openPatientProfileTab } = useTabs();
+  const [localSearchQuery, setLocalSearchQuery] = useState('');
+
+  // Fetch patients from external FHIR API
+  const { data: patientListData, isLoading, error } = useGetPatientListQuery({
+    search: searchQuery,
+    page: 0,
+    pageSize: 100
+  });
+
+  // Delete patient mutation
+  const [deletePatient, { isLoading: isDeleting }] = useDeletePatientMutation();
+
+
+
+  // Transform FHIR Bundle response to display format
+  const filteredPatients = useMemo(() => {
+    if (!patientListData?.entry) {
+      return [];
+    }
+
+    console.log('patientListData:', patientListData);
+    console.log('First patient entry:', patientListData.entry[0]);
+
+    // Transform mapped Patient service response to display format
+    let transformedPatients = patientListData.entry.map((patient: any) => {
+      const birthDateString = typeof patient.birthdate === 'string' 
+        ? patient.birthdate 
+        : patient.birthdate?.format?.('YYYY-MM-DD') || '';
+      const age = birthDateString ? moment().diff(moment(birthDateString), 'years') : 0;
+      const gender = patient.gender === 'male' ? 'M' : patient.gender === 'female' ? 'F' : patient.gender?.charAt(0)?.toUpperCase() || 'U';
+
+      return {
+        key: patient.id,
+        id: patient.id,
+        identifier: patient.mrn || patient.idNumber || 'N/A',
+        name: patient.name || 'Unknown',
+        age,
+        gender,
+        birthDate: birthDateString,
+        phone: patient.contactNumber || '',
+        email: patient.email || '',
+        address: patient.address || '',
+        postalCode: patient.postalCode || '',
+        country: patient.country || '',
+        originalPatient: patient, // Preserve original Patient data for editing
+      };
+    });
+
+    // Apply local search filter if there's a local search query
+    if (localSearchQuery.trim()) {
+      const query = localSearchQuery.toLowerCase().trim();
+      transformedPatients = transformedPatients.filter((patient) => {
+        return (
+          patient.name.toLowerCase().includes(query) ||
+          patient.identifier.toLowerCase().includes(query) ||
+          patient.phone.toLowerCase().includes(query) ||
+          patient.email.toLowerCase().includes(query) ||
+          patient.address.toLowerCase().includes(query) ||
+          patient.birthDate.toLowerCase().includes(query)
+        );
+      });
+    }
+
+    return transformedPatients;
+  }, [patientListData, localSearchQuery]);
+
+  const handlePatientClick = (patientId: string, patientName: string) => {
+    openPatientProfileTab(patientId, patientName);
+  };
+
+  const handleDeletePatient = (patientId: string, patientName: string) => {
+    Modal.confirm({
+      title: 'Delete Patient',
+      content: `Are you sure you want to delete patient "${patientName}"? This action cannot be undone.`,
+      okText: 'Delete',
+      okType: 'danger',
+      cancelText: 'Cancel',
+      onOk: async () => {
+        try {
+          await deletePatient(patientId).unwrap();
+          message.success(`Patient "${patientName}" has been deleted successfully.`);
+        } catch (error) {
+          console.error('Failed to delete patient:', error);
+          message.error('Failed to delete patient. Please try again.');
+        }
       },
-      identifier: [
-        {
-          value: 'S1234567D',
-        },
-      ],
-      name: [
-        {
-          use: 'official',
-          text: 'Lim Ah Seng',
-          family: 'Lim',
-          prefix: ['Mr'],
-        },
-      ],
-      telecom: [
-        {
-          system: 'phone',
-          value: '98765432',
-          use: 'mobile',
-        },
-        {
-          system: 'email',
-          value: 'myinfotesting@gmail.com',
-        },
-      ],
-      gender: 'male',
-      birthDate: '2000-01-01',
-      address: [
-        {
-          use: 'home',
-          line: [
-            '6',
-            'Serangoon North Avenue 5',
-            '05',
-            '11',
-            'MapleTree',
-            'SG',
-          ],
-          postalCode: '554910',
-          country: 'Singapore',
-        },
-      ],
-    },
-    search: {
-      mode: 'match',
-    },
-  },
-  {
-    fullUrl:
-      'http://fhirapi.healthx.sg/Patient/6349F3F7D3CD4BBF86D3D0294A7E0E72',
-    resource: {
-      resourceType: 'Patient',
-      id: '6349F3F7D3CD4BBF86D3D0294A7E0E72',
-      meta: {
-        versionId: '1',
-        lastUpdated: '2025-07-01T14:03:24.614+08:00',
-      },
-      identifier: [
-        {
-          value: 'S1234568D',
-        },
-      ],
-      name: [
-        {
-          use: 'official',
-          text: 'Jonathan Joestar',
-          family: 'Joestar',
-          prefix: ['Mr'],
-        },
-      ],
-      telecom: [
-        {
-          system: 'phone',
-          value: '88889999',
-          use: 'mobile',
-        },
-        {
-          system: 'email',
-          value: 'jonathanj888@gmail.com',
-        },
-      ],
-      gender: 'male',
-      birthDate: '1968-02-12',
-      address: [
-        {
-          use: 'home',
-          line: ['1 North', 'Buona Vista Link', '05', '01', 'Elementum', 'SG'],
-          postalCode: '139691',
-          country: 'Singapore',
-        },
-      ],
-    },
-    search: {
-      mode: 'match',
-    },
-  },
-];
+    });
+  };
 
-const PatientTable: React.FC = () => {
-  return <Table columns={columns} dataSource={data} />;
+  const columns = [
+    {
+      title: 'Patient Information',
+      key: 'patient',
+      width: '35%',
+      render: (_: any, record: any) => (
+        <div className="flex items-center gap-3">
+          <Avatar 
+            icon={<UserOutlined />} 
+            className={`flex-shrink-0 ${
+              record.gender === 'M' ? 'bg-blue-500' : 
+              record.gender === 'F' ? 'bg-pink-500' : 
+              'bg-green-500'
+            }`} 
+          />
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center gap-2 mb-0.5">
+              <Button 
+                type="link" 
+                className="p-0 h-auto text-sm font-bold text-blue-900"
+                onClick={() => handlePatientClick(record.id, record.name)}
+              >
+                {record.name}
+              </Button>
+            </div>
+            <div className="text-xs text-gray-600">
+              <Text className="text-xs">ID: {record.identifier}</Text>
+              <Text className="text-xs ml-3">{record.gender}, {record.age}y</Text>
+            </div>
+            <div className="text-[11px] text-gray-400">
+              DOB: {record.birthDate ? moment(record.birthDate).format('DD/MM/YYYY') : 'N/A'}
+            </div>
+          </div>
+        </div>
+      ),
+    },
+    {
+      title: '📞 Contact Information',
+      key: 'contact',
+      width: '25%',
+      render: (_: any, record: any) => (
+        <div>
+          {record.phone && (
+            <div className="text-xs mb-1">
+              {record.phone}
+            </div>
+          )}
+          {record.email && (
+            <div className="text-xs text-gray-600 mb-1">
+              {record.email}
+            </div>
+          )}
+          {!record.phone && !record.email && (
+            <div className="text-xs text-gray-400">
+              No contact info
+            </div>
+          )}
+        </div>
+      ),
+    },
+    {
+      title: '🏠 Address',
+      key: 'address',
+      width: '25%',
+      render: (_: any, record: any) => (
+        <div>
+          {record.address && (
+            <div className="text-xs mb-0.5">
+              {record.address}
+            </div>
+          )}
+          {(record.postalCode || record.country) && (
+            <div className="text-[11px] text-gray-600">
+              {record.postalCode} {record.country}
+            </div>
+          )}
+          {!record.address && !record.postalCode && !record.country && (
+            <div className="text-xs text-gray-400">
+              No address
+            </div>
+          )}
+        </div>
+      ),
+    },
+    {
+      title: 'Actions',
+      key: 'actions',
+      width: '15%',
+      render: (_: any, record: any) => (
+        <Space size="small">
+          <Button 
+            type="default" 
+            shape="circle"
+            icon={<FileTextOutlined />}
+            onClick={() => handlePatientClick(record.id, record.name)}
+            title="View Profile"
+          />
+          <Button 
+            type="default" 
+            shape="circle"
+            icon={<EditOutlined />}
+            onClick={() => onEditPatient?.(record.originalPatient)}
+            title="Edit"
+          />
+          <Button 
+            type="default" 
+            shape="circle"
+            icon={<DeleteOutlined />}
+            onClick={() => handleDeletePatient(record.id, record.name)}
+            title="Delete"
+            loading={isDeleting}
+            danger
+          />
+        </Space>
+      ),
+    },
+  ];
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-[400px]">
+        <Spin size="large" tip="Loading patients...">
+          <div className="min-h-[200px]" />
+        </Spin>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="text-center p-10 text-red-500">
+        <Text>Error loading patients. Please try again.</Text>
+      </div>
+    );
+  }
+
+  return (
+    <div className='mt-4'>
+      {/* Search Input */}
+      <div className="flex justify-end mb-4">
+        <Input.Search
+          placeholder="Search here..."
+          allowClear
+          value={localSearchQuery}
+          onChange={(e) => setLocalSearchQuery(e.target.value)}
+          enterButton={<SearchOutlined />}
+          className="w-80"
+        />
+      </div>
+      
+      <Table
+        columns={columns}
+        dataSource={filteredPatients}
+        pagination={{
+          pageSize: 20,
+          showSizeChanger: true,
+          showQuickJumper: true,
+          showTotal: (total, range) => 
+            `${range[0]}-${range[1]} of ${total} patients`,
+          className: 'text-xs'
+        }}
+        size="small"
+        scroll={{ y: 600 }}
+        rowClassName={() => 'patient-row-normal'}
+        className="text-xs"
+      />
+
+      {/* Results summary moved to bottom */}
+      <div className="mt-3 flex justify-between items-center">
+        <Text className="text-xs text-gray-400">
+          Last updated: {moment().format('MM/DD/YY h:mm A')}
+        </Text>
+      </div>
+
+      <style>{`
+        .patient-row-normal:hover {
+          background-color: #f0f8ff !important;
+        }
+        .ant-table-tbody > tr > td {
+          padding: 8px 8px !important;
+        }
+        .ant-table-thead > tr > th {
+          background-color: #f0f8ff !important;
+          font-weight: bold !important;
+          font-size: 12px !important;
+          padding: 8px 8px !important;
+        }
+      `}</style>
+    </div>
+  );
 };
 
 export default PatientTable;

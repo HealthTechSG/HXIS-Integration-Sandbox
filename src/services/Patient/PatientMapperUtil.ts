@@ -5,14 +5,14 @@ import type {
   PatientRemarks,
   PatientImmunization,
   GetPatientListRequest,
-  CreatePatientRequest,
+  // CreatePatientRequest,
 } from './PatientTypes';
 import type {
   Patient as FhirPatient,
   Communication as FhirCommunication,
   AllergyIntolerance as FhirAllergy,
   RelatedPerson as FhirRelatedPerson,
-  Bundle as FhirBundle,
+  // Bundle as FhirBundle,
   Immunization as FhirImmunization,
 } from 'fhir/r5';
 import { isEmpty, get } from 'lodash-es';
@@ -27,33 +27,42 @@ const FhirPatientMapperUtil = {
   //* Patient
   //* --------------------------------------------------------------------------
   // TODO: Map all properly.
-  mapFromFhirPatient: (fhirPatient: FhirPatient) =>
-    ({
+  mapFromFhirPatient: (fhirPatient: FhirPatient) => {
+    // Extract address information from FHIR format
+    const addressLines = fhirPatient.address?.[0]?.line || [];
+    const address = addressLines.length > 0 ? addressLines.slice(0, 2).join(' ') : '';
+    const postalCode = fhirPatient.address?.[0]?.postalCode || '';
+    const country = fhirPatient.address?.[0]?.country || '';
+
+    return {
       id: fhirPatient.id,
       mrn:
         fhirPatient.identifier?.find(
-          (identifier) => identifier.use === 'official',
-        )?.value || '',
+          (identifier) => identifier.use === 'usual',
+        )?.value || fhirPatient.identifier?.[0]?.value || '',
       name: fhirPatient.name?.[0].text || '',
       active: fhirPatient.active ?? true,
       gender: fhirPatient.gender || '',
       birthdate: fhirPatient.birthDate,
-      maritalStatus: fhirPatient.maritalStatus?.text || '',
       idType:
         fhirPatient.identifier?.find(
-          (identifier) => identifier.use === 'secondary',
-        )?.system || '',
+          (identifier) => identifier.use === 'official',
+        )?.type?.text || '',
       idNumber:
         fhirPatient.identifier?.find(
-          (identifier) => identifier.use === 'secondary',
-        )?.value || '',
+          (identifier) => identifier.use === 'official',
+        )?.value || fhirPatient.identifier?.[0]?.value || '',
       contactNumber:
         fhirPatient.telecom?.find((telecom) => telecom.system === 'phone')
           ?.value || '',
       email:
         fhirPatient.telecom?.find((telecom) => telecom.system === 'email')
           ?.value || '',
-    }) as Patient,
+      address,
+      postalCode,
+      country,
+    } as Patient;
+  },
 
   //* --------------------------------------------------------------------------
   mapToFhirPatient: (patient: Partial<Patient>) =>
@@ -63,13 +72,30 @@ const FhirPatientMapperUtil = {
       identifier: [
         {
           use: 'official',
-          system: 'http://example.org/MRN', // TODO: find out the system of MRN.
-          value: patient.mrn,
+          type:{
+            coding:[
+              {
+                system:"http://terminology.hl7.org/CodeSystem/v2-0203",
+                code:"NI"
+              }
+            ],
+            text: patient.idType
+          },
+          system: 'https://ica.gov.sg/nric', // TODO: find out the system of NRIC.
+          value: patient.idNumber,
         },
         {
-          use: 'secondary',
-          system: patient.idType,
-          value: patient.idNumber,
+          use: 'usual',
+          type:{
+            coding:[
+              {
+                system:"http://terminology.hl7.org/CodeSystem/v2-0203",
+                code:"MR"
+              }
+            ]
+          },
+          system: "https://yourhospital.com.sg/mrn", // TODO: find out the system of MRN.
+          value: patient.mrn,
         },
       ],
       name: [
@@ -82,15 +108,26 @@ const FhirPatientMapperUtil = {
       birthDate: patient.birthdate
         ? DateUtils.formatDateForFhir(patient.birthdate)
         : undefined,
-      maritalStatus: {
-        text: patient.maritalStatus,
-      },
       telecom: [
         ...(patient.contactNumber
           ? [{ system: 'phone', value: patient.contactNumber }]
           : []),
         ...(patient.email ? [{ system: 'email', value: patient.email }] : []),
       ],
+      ...(patient.address || patient.postalCode || patient.country
+        ? {
+            address: [
+              {
+                use: "home",
+                ...(patient.postalCode && { postalCode: patient.postalCode }),
+                ...(patient.country && { country: patient.country }),
+                ...(patient.address && { 
+                  line: patient.address.split(',').map(part => part.trim()).filter(part => part.length > 0)
+                }),
+              },
+            ],
+          }
+        : {}),
     }) as FhirPatient,
 
   //* --------------------------------------------------------------------------
@@ -306,63 +343,6 @@ const FhirPatientMapperUtil = {
           ],
     }) as FhirImmunization,
 
-  //* --------------------------------------------------------------------------
-  //* Create Patient Request
-  //* --------------------------------------------------------------------------
-  mapCreatePatientRequestToFhirBundle: (request: CreatePatientRequest) => {
-    const { allergies = [], nextOfKins = [], patient, remarks = [] } = request;
-
-    // Placeholder for the new patient id.
-    const NEW_PATIENT_URN = 'urn:uuid:new-patient-id';
-
-    // Return the Bundle
-    return {
-      resourceType: 'Bundle',
-      type: 'transaction',
-      id: 'bundle-transaction',
-      entry: [
-        {
-          // Main Patient Record
-          fullUrl: NEW_PATIENT_URN,
-          resource: FhirPatientMapperUtil.mapToFhirPatient(patient),
-          request: { method: 'POST', url: 'Patient' },
-        },
-        // Allergy list
-        ...allergies.map((allergy) => ({
-          resource: {
-            ...FhirPatientMapperUtil.mapToFhirAllergy(allergy),
-            patient: { reference: NEW_PATIENT_URN },
-          },
-          request: { method: 'POST', url: 'AllergyIntolerance' },
-        })),
-        // Next of kin list
-        ...nextOfKins.map((nextOfKin) => ({
-          resource: {
-            ...FhirPatientMapperUtil.mapToFhirRelatedPerson(nextOfKin),
-            patient: { reference: NEW_PATIENT_URN },
-          },
-          request: { method: 'POST', url: 'RelatedPerson' },
-        })),
-        // Remarks
-        ...remarks.map((remarks) => ({
-          resource: {
-            ...FhirPatientMapperUtil.mapToFhirCommunication(remarks),
-            subject: { reference: NEW_PATIENT_URN },
-          },
-          request: { method: 'POST', url: 'Communication' },
-        })),
-      ],
-    } as FhirBundle;
-  },
-
-  //* --------------------------------------------------------------------------
-  mapCreatePatientResponseFromFhirBundle: (response: FhirBundle) => {
-    const fhirPatient = response.entry?.find(
-      (row) => row.resource?.resourceType === 'Patient',
-    )?.resource as FhirPatient;
-
-    return FhirPatientMapperUtil.mapFromFhirPatient(fhirPatient);
-  },
 
   //* --------------------------------------------------------------------------
 };

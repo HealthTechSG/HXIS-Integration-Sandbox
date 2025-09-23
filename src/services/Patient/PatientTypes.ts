@@ -13,6 +13,9 @@ export type Patient = {
   idNumber: string;
   contactNumber: string;
   email: string;
+  address: string;
+  postalCode: string;
+  country: string;
 };
 
 export type PatientAllergy = {
@@ -78,9 +81,4 @@ export type GetPatientListRequest = {
   email?: string;
 };
 
-export type CreatePatientRequest = {
-  patient: Partial<Patient>;
-  allergies: Partial<PatientAllergy>[];
-  nextOfKins: Partial<PatientNextOfKin>[];
-  remarks: Partial<PatientRemarks>[];
-};
+export type CreatePatientRequest = Partial<Patient>;

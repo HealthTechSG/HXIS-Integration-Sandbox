@@ -1,6 +1,6 @@
 import { BasePageRouteObject } from '@/common/types';
 import { RouteMap } from '@/configs';
-import { PatientListPage, PatientProfilePage } from '../components';
+import { PatientManagementPage } from '../components';
 import PrivateRoute from '@/common/components/PrivateRoute';
 
 const { PatientPaths } = RouteMap;
@@ -11,25 +11,12 @@ const PatientRoutes: BasePageRouteObject[] = [
     path: PatientPaths.PatientList,
     element: (
       <PrivateRoute>
-        <PatientListPage />
+        <PatientManagementPage />
       </PrivateRoute>
     ),
     handle: {
-      pageTitle: 'Patient List',
-      breadcrumbs: [{ title: 'Patient List' }],
-      layout: 'private',
-    },
-  },
-  {
-    path: PatientPaths.PatientProfile,
-    element: (
-      <PrivateRoute>
-        <PatientProfilePage />
-      </PrivateRoute>
-    ),
-    handle: {
-      pageTitle: 'Patient List',
-      breadcrumbs: [{ title: 'Patient List' }],
+      pageTitle: 'Patient Management',
+      breadcrumbs: [{ title: 'Patient Management' }],
       layout: 'private',
     },
   },

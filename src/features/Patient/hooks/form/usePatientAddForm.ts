@@ -1,5 +1,3 @@
-import dayjs from 'dayjs';
-import { isEmpty } from 'lodash-es';
 import { useState } from 'react';
 
 import { useCreatePatientMutation } from '@/services/Patient/PatientService';
@@ -17,16 +15,8 @@ const usePatientAddForm = () => {
 
     // Pre-process data
     const request: CreatePatientRequest = {
-      patient: {
-        ...values,
-        active: !values?.isInactive,
-      },
-      allergies: values?.allergyList?.map((allergy: any) => ({
-        ...allergy,
-        recordedDate: dayjs(),
-      })),
-      nextOfKins: values?.nextOfKinList,
-      remarks: isEmpty(values?.remarks) ? [] : [{ remarks: values?.remarks }],
+      ...values,
+      active: !values?.isInactive,
     };
 
     // Trigger mutation

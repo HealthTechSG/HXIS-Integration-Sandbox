@@ -90,14 +90,16 @@ export const PatientApi = createApi({
     }),
 
     //* Create -----------------------------------------------------------------
-    // The Create Patient is done in a transaction bundle, to create the references together.
     createPatient: builder.mutation<Patient, CreatePatientRequest>({
-      queryFn: (request) =>
-        client.postBundleRequest<CreatePatientRequest, Patient>({
+      queryFn: (request) => {
+        console.log('🔵 [PatientService] Received CreatePatientRequest:', request);
+        
+        return client.createResource<CreatePatientRequest, FhirPatient, Patient>({
           body: request,
-          mapReqFn: PatientMapperUtil.mapCreatePatientRequestToFhirBundle,
-          mapResFn: PatientMapperUtil.mapCreatePatientResponseFromFhirBundle,
-        }),
+          mapReqFn: PatientMapperUtil.mapToFhirPatient,
+          mapResFn: PatientMapperUtil.mapFromFhirPatient,
+        });
+      },
       invalidatesTags: [{ type: 'Patient' }],
     }),
 

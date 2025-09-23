@@ -1,48 +1,64 @@
-# AWS-HXIS User Apps Platform Sample Vite React App
+# HXIS Integration Sandbox - NGEMR Development Environment
 
 ## About
 
-This sample Vite React app serves as a reference for developers working with the AWS-HXIS User Apps Platform. It provides a structured setup to get started with the platform and connects seamlessly with FHIRNexus APIs for both development and production environments.
+The **HXIS Integration Sandbox** is a comprehensive development environment that provides a production-like mockup of Singapore's **National Group Electronic Medical Record (NGEMR)** system. This sandbox enables healthcare developers to build, test, and validate their FHIR-based integrations during **Proof-of-Concept (POC)** and **Proof-of-Value (POV)** phases without requiring direct access to production NGEMR systems.
+
+### Why This Sandbox?
+
+NGEMR currently uses **EPIC APIs** for healthcare data exchange, but developers face challenges during the initial development phases:
+
+- **Limited Access**: Production NGEMR systems are restricted for security and compliance reasons
+- **POC Barriers**: Developers cannot easily test integration patterns without real data
+- **POV Challenges**: Demonstrating value propositions requires realistic healthcare scenarios
+- **Learning Curve**: Understanding EPIC FHIR API patterns requires hands-on experience
+
+This sandbox solves these problems by providing:
+- **Production-like NGEMR data** with realistic patient demographics and medical histories
+- **EPIC-compatible FHIR API interfaces** that mirror production behavior
+- **Comprehensive healthcare scenarios** for testing various integration patterns
+- **Safe development environment** for learning and experimentation
 
 ### Tech Stack Overview
 
-This sample project utilizes the following technologies:
+This sandbox utilizes modern web technologies optimized for healthcare development:
 
-- **[Vite](https://vitejs.dev/)**: A fast build tool and development server for modern web projects.
-- **[React](https://reactjs.org/)**: A JavaScript library for building user interfaces.
-- **[TypeScript](https://www.typescriptlang.org/)**: A strongly typed programming language that builds on JavaScript.
-- **[Tailwind CSS](https://tailwindcss.com/)**: A utility-first CSS framework for rapid UI development.
-- **[React OIDC Context](https://www.npmjs.com/package/react-oidc-context)**: Used for authentication.
-- **[FHIRClient](https://github.com/smart-on-fhir/client-js)**: A library for interacting with FHIR APIs.
-- **[Zod](https://github.com/colinhacks/zod)**: A TypeScript-first schema declaration and validation library.
-- **[Ant Design](https://ant.design/)**: A design system for enterprise-level products.
-- **[RTK Query](https://redux-toolkit.js.org/rtk-query/overview)**: A data-fetching and caching library for Redux.
+- **[Vite](https://vitejs.dev/)**: Lightning-fast build tool and development server
+- **[React 18](https://reactjs.org/)**: Modern UI library with concurrent features
+- **[TypeScript](https://www.typescriptlang.org/)**: Type-safe development with healthcare data models
+- **[Tailwind CSS](https://tailwindcss.com/)**: Utility-first styling for healthcare UIs
+- **[Ant Design](https://ant.design/)**: Enterprise-grade UI components for medical applications
+- **[React OIDC Context](https://www.npmjs.com/package/react-oidc-context)**: Healthcare-grade authentication
+- **[FHIRClient](https://github.com/smart-on-fhir/client-js)**: Standard FHIR R4 API interactions
+- **[Redux Toolkit](https://redux-toolkit.js.org/rtk-query/overview)**: State management with RTK Query for API caching and tab management
+- **[Zod](https://github.com/colinhacks/zod)**: Runtime type validation for healthcare data integrity
+- **[Vitest](https://vitest.dev/)**: Fast unit testing framework
 
-These technologies provide a robust and scalable foundation for developing provider-facing applications on the AWS-HXIS User Apps Platform.
+### Target Users
 
-### Who should use this?
+This sandbox is designed for:
 
-If your project meets the following criteria, this template is for you:
-
-- Planning to use APIs provided by HealthX
-- Deploymenting on the HealthX User Apps Platform
-- (Optional) Launching Smart Apps via HealthX SmartOnFHIR Integration
+- **Healthcare Integration Developers** building NGEMR-connected applications
+- **POC/POV Teams** needing realistic data for demonstrations
+- **Healthcare IT Consultants** learning EPIC FHIR integration patterns
+- **Medical Software Vendors** developing NGEMR-compatible solutions
+- **Healthcare Startups** prototyping digital health solutions
+- **Training Organizations** teaching healthcare interoperability
 
 ---
 
 ## Table of Contents
 
 1. [Getting Started](#1-getting-started)
-2. [Project Setup](#2-project-setup)
+2. [NGEMR Sandbox Features](#2-ngemr-sandbox-features)
 3. [Environment Configuration](#3-environment-configuration)
-4. [TypeScript Environment Validation](#4-typescript-environment-validation)
-5. [Authentication](#5-authentication)
-6. [Development](#6-development)
-7. [Production](#7-production)
-8. [Deployment](#8-deployment)
-9. [SmartOnFHIR Integration](#9-smartonfhir-integration)
-10. [Additional Notes](#10-additional-notes)
-11. [License](#11-license)
+4. [FHIR Resource Coverage](#4-fhir-resource-coverage)
+5. [Development Workflow](#5-development-workflow)
+6. [EPIC API Compatibility](#6-epic-api-compatibility)
+7. [Testing & Validation](#7-testing--validation)
+8. [Deployment Options](#8-deployment-options)
+9. [POC/POV Use Cases](#9-pocpov-use-cases)
+10. [Contributing](#10-contributing)
 
 ---
 
@@ -52,529 +68,500 @@ If your project meets the following criteria, this template is for you:
 
 Ensure you have the following installed:
 
-- [Node.js](https://nodejs.org/) (v18 or later)
-- [Git](https://git-scm.com/)
+- **[Node.js](https://nodejs.org/)** (v18 or later) - Required for modern JavaScript features
+- **[Git](https://git-scm.com/)** - Version control for collaboration
+- **Basic FHIR Knowledge** - Understanding of healthcare data standards (optional but helpful)
 
 ### Installation
 
-1. **Clone the Repository**
+1. **Clone the Sandbox Repository**
 
 ```bash
-git clone https://github.com/HealthTechSG/HealthX-UserApp-Sample
-cd HealthX-UserApp-Sample
+git clone https://github.com/HealthTechSG/HXIS-Integration-Sandbox
+cd HXIS-Integration-Sandbox
 ```
 
 2. **Install Dependencies**
-
-Navigate into the project directory and install dependencies:
 
 ```bash
 npm install
 ```
 
----
-
-## 2. Project Setup
-
-This project follows a feature-based architecture to promote maintainability and scalability. The codebase is organized into distinct modules, each responsible for specific functionality.
-
-### Project Structure Overview
-
-```
-.
-├── /docs           # Documentation files for project reference
-├── /env            # Environment configuration files
-├── /public         # Static files served by the webserver
-├── /src            # Application source code
-│   ├── /app        # Core app components and providers
-│   ├── /assets     # Static assets (images, icons, etc.)
-│   ├── /common     # Shared components, hooks, and utilities
-│   ├── /configs    # Global configuration files
-│   ├── /features   # Feature-based modules
-│   ├── /i18n       # Internationalization resources
-│   ├── /redux      # Redux state management
-│   ├── /services   # API services and data fetching
-│   └── /utils      # Utility functions
-└── ... (configuration files)
-```
-
-To set up your development environment, copy the sample environment files from the `env` folder to create your own local configuration:
+3. **Set Up Environment**
 
 ```bash
 cp env/.env.development.sample env/.env.development.local
-# Edit env/.env.development.local with your settings
+# Edit env/.env.development.local with your sandbox configuration
 ```
 
-See the [Environment Configuration](#3-environment-configuration) section for details on configuring your environment variables.
-
----
-
-## 3. Environment Configuration
-
-The project uses consistent environment variables for both development and production to allow seamless transitions between environments. Configuration files are stored in the `env` folder.
-
-### Environment Variables
-
-Below is a sample of the environment configuration (`.env.development.sample` or `.env.production.sample`):
-
-```plaintext
-# ==============================================================================
-# User App configuration - Variables are retrievable from HXIS User Apps platform
-# 1. Visit User Apps platform (https://developer.healthx.sg/userapp)
-# 2. Select User App
-# 3. View Details
-# ==============================================================================
-VITE_APP_TITLE='User App (Development)'
-VITE_APP_BASE_URL="/apps"
-VITE_APP_ID='app-123'
-VITE_FHIR_API_BASE_URL='https://api.healthx.sg/fhir/r4b/tenant-123'
-VITE_FHIR_API_KEY="api-key-123"
-
-# ==============================================================================
-# Authentication configuration - Variables are retrievable from HXIS User Apps platform
-# 1. Visit User Apps platform (https://developer.healthx.sg/userapp)
-# 2. Select User App
-# 3. View Details
-# ==============================================================================
-VITE_OIDC_AUTHORITY='https://auth.healthx.sg/realms/tenant-123'
-VITE_OIDC_CLIENT_ID='client-123'
-VITE_OIDC_REDIRECT_URI='http://localhost:3000${VITE_APP_BASE_URL}/${VITE_APP_ID}'
-
-# ==============================================================================
-# * This section is only required if you are launching a Smart App
-# Smart App Launch configuration - Variables are retrievable from HXIS Smart Apps Gallery
-# 1. Visit Smart Apps Gallery (https://smartapps.healthx.sg)
-# 2. Select Smart App
-# 3. View Launchers
-# 4. Select Launcher
-# ==============================================================================
-VITE_SMART_LAUNCH_TOKEN_URL='https://auth.healthx.sg/launch'
-```
-
-### Obtaining Configuration Values
-
-- **User App Configuration**: Values for app title, ID, and API endpoints can be obtained from the [HealthX User Apps Platform](https://developer.healthx.sg/userapp) by selecting your app and viewing its details.
-
-- **Authentication Configuration**: OIDC credentials are also available in the User Apps Platform under your app's details.
-
-- **Smart App Launch Configuration**: If your app integrates with Smart Apps, you can retrieve the required values from the [HealthX Smart Apps Gallery](https://smartapps.healthx.sg).
-
-### Development vs Production
-
-For development, use `.env.development`, which typically points to:
-
-- Local or test instances of your app
-- Test APIs and authentication services
-- Localhost redirect URIs
-
-For production, use `.env.production`, with:
-
-- Production endpoints and URLs
-- Production authentication configuration
-- Domain-based redirect URIs
-
-Copy the sample files to create your own environment files (e.g., `.env.development.local` or `.env.production.local`) which will not be tracked by version control.
-
----
-
-## 4. TypeScript Environment Validation
-
-The `<root>/src/env.config.ts` file is used to validate and type-check environment variables, ensuring correct configuration for the app. This setup uses `@julr/vite-plugin-validate-env` with `zod` schemas for type safety and validation.
-
-```typescript
-// file: src/env.config.ts
-
-//* This file is used to define the environment variables that are required for the application to run.
-//* You can customize the schema to fit your needs.
-
-import { defineConfig as defineEnvConfig } from '@julr/vite-plugin-validate-env';
-import { z } from 'zod';
-
-// =============================================================================
-// ! These are the required environment variables for the application to run.
-// ! Only edit them if you know what you are doing.
-// =============================================================================
-const requiredSchema = {
-  //* Application ==============================================================
-  // VITE_APP_BASE_URL is always "/apps" in production mode, to deploy on User Apps platform
-  VITE_APP_BASE_URL: z.preprocess(
-    (val) => {
-      if (process.env.NODE_ENV === 'production') return '/apps';
-      return val;
-    },
-    z.string().min(1, {
-      message: 'Base URL is required, e.g. /apps',
-    }),
-  ),
-  VITE_APP_TITLE: z.string().min(1, {
-    message: 'App Title is required, e.g. Mini-EMR',
-  }),
-  VITE_APP_ID: z.string().min(1, {
-    message:
-      'App ID (uuid) is required, e.g. g59846c5-fc5e-4f3e-8cb3-6491578195ad',
-  }),
-  VITE_FHIR_API_BASE_URL: z.string().min(1, {
-    message:
-      'FHIR API Base URL is required, e.g. https://api.healthx.sg/fhir/r4b/<tenant>',
-  }),
-  VITE_FHIR_API_KEY: z.string().min(1, {
-    message:
-      'FHIR API Key is required, e.g. <fhir-api-key>, to access the FHIR API',
-  }),
-
-  //* Authentication ===========================================================
-  VITE_OIDC_AUTHORITY: z.string().min(1, {
-    message:
-      'OIDC Authority is required, e.g. https://auth.healthx.sg/realms/<realm>',
-  }),
-  VITE_OIDC_CLIENT_ID: z.string().min(1, {
-    message: 'OIDC Client ID is required, e.g. <client-id>',
-  }),
-  VITE_OIDC_REDIRECT_URI: z.string().min(1, {
-    message:
-      'OIDC Redirect URI is required, e.g https://userapps.healthx.sg/apps/<app-id>',
-  }),
-
-  //* SmartonFHIR ==============================================================
-  VITE_SMART_LAUNCH_TOKEN_URL: z
-    .string()
-    .url({
-      message:
-        'Need a valid URL for the Smart Launch Token, e.g. https://auth.healthx.sg/launch',
-    })
-    .optional(),
-  VITE_SMART_APP_BASE_URL: z
-    .string()
-    .url({
-      message:
-        'Need a valid URL for the Smart App Base URL, e.g. https://userapps.healthx.sg/apps/<app-id>/launch',
-    })
-    .optional(),
-  VITE_SMART_FHIR_RESOURCE_BASE_URL: z
-    .string()
-    .url({
-      message:
-        'Need a valid URL for the Smart FHIR Resource Base URL, e.g. https://api.healthx.sg/fhir/r4b/<tenant>',
-    })
-    .optional(),
-};
-
-// =============================================================================
-// * Define the environment variables configuration below
-// =============================================================================
-export default defineEnvConfig({
-  validator: 'zod',
-  schema: {
-    ...requiredSchema,
-    // More environment variables... (add to your use case)
-  },
-});
-```
-
-Refer to the [`zod` documentation](https://github.com/colinhacks/zod) for more complex validation schemas.
-
----
-
-## 5. Authentication
-
-The User App uses OpenID Connect (OIDC) for authentication, implemented through the `react-oidc-context` library. This approach provides a standardized authentication flow that works with various identity providers compatible with the OIDC protocol.
-
-This project leverages the following packages for authentication:
-
-- **[`react-oidc-context`](https://www.npmjs.com/package/react-oidc-context)**: Provides React context and hooks for OpenID Connect authentication.
-- **[`oidc-client-ts`](https://www.npmjs.com/package/oidc-client-ts)**: The underlying OIDC client library that handles the authentication protocol.
-
-### Authentication Configuration
-
-The authentication configuration is set up in the main `App.tsx` file:
-
-```typescript
-import { AuthProvider, type AuthProviderProps } from 'react-oidc-context';
-import { WebStorageStateStore } from 'oidc-client-ts';
-
-const AuthProviderConfig: AuthProviderProps = {
-  // OIDC Configuration
-  authority: import.meta.env.VITE_OIDC_AUTHORITY,
-  client_id: import.meta.env.VITE_OIDC_CLIENT_ID,
-  redirect_uri: import.meta.env.VITE_OIDC_REDIRECT_URI,
-
-  // Uses localStorage for user session
-  userStore: new WebStorageStateStore({
-    store: window.localStorage,
-  }),
-};
-
-const App = () => (
-  <AuthProvider {...AuthProviderConfig}>
-    {/* Rest of the application */}
-  </AuthProvider>
-);
-```
-
-### Using the Authentication Hooks
-
-The `react-oidc-context` library provides hooks to access authentication state and user information throughout your application:
-
-```typescript
-import { useAuth } from 'react-oidc-context';
-
-function Profile() {
-  const auth = useAuth();
-
-  if (auth.isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  if (auth.error) {
-    return <div>Oops... {auth.error.message}</div>;
-  }
-
-  if (auth.isAuthenticated) {
-    return (
-      <div>
-        Hello {auth.user?.profile.given_name}{' '}
-        <button onClick={() => auth.signoutRedirect()}>Log out</button>
-      </div>
-    );
-  }
-
-  return <button onClick={() => auth.signinRedirect()}>Log in</button>;
-}
-```
-
-### Protected Routes
-
-The application uses a `ProtectedRoute` component to restrict access to authenticated users only:
-
-```typescript
-// In ProtectedRoute.tsx
-import { PropsWithChildren } from 'react';
-import { withAuthenticationRequired } from 'react-oidc-context';
-
-const ProtectedRoute = withAuthenticationRequired(
-  ({ children }: PropsWithChildren) => children,
-  {
-    OnRedirecting: () => (
-      <div className="flex h-screen items-center justify-center">
-        <h1 className="text-2xl font-bold">Redirecting to login...</h1>
-      </div>
-    ),
-  },
-);
-
-export default ProtectedRoute;
-```
-
-Usage in your routes (as shown in PatientRoutes.tsx):
-
-```typescript
-import ProtectedRoute from '@/common/components/ProtectedRoute';
-import { BasePageRouteObject } from '@/common/types';
-import { RouteMap } from '@/configs';
-
-const { PatientPaths } = RouteMap;
-
-const PatientRoutes: BasePageRouteObject[] = [
-  {
-    path: PatientPaths.PatientList,
-    element: (
-      <ProtectedRoute>
-        <PatientListPage />
-      </ProtectedRoute>
-    ),
-    handle: {
-      pageTitle: 'Patient List',
-      breadcrumbs: [{ title: 'Patient List' }],
-    },
-  },
-  // Other routes...
-];
-```
-
-### Development Considerations
-
-For development purposes, ensure that your OIDC provider is properly configured to allow redirects to your local development URL (typically `http://localhost:5173` if using the default Vite port).
-
-Make sure to set the proper environment variables as specified in the Environment Configuration section:
-
-- `VITE_OIDC_AUTHORITY`: The URL of your OpenID Connect provider
-- `VITE_OIDC_CLIENT_ID`: Your application's client ID registered with the OIDC provider
-- `VITE_OIDC_REDIRECT_URI`: The URL where users should be redirected after authentication
-
----
-
-## 6. Development
-
-### Running the Development Server
-
-To start the development server:
+4. **Start the Development Server**
 
 ```bash
 npm run dev
 ```
 
-This will launch the app in development mode with hot reloading.
+The sandbox will be available at `http://localhost:3000` with a full NGEMR-like interface.
 
 ---
 
-## 7. Production
+## 2. NGEMR Sandbox Features
 
-### Building for Production
+### Core Capabilities
 
-To build the application for production:
+#### 🏥 **Production-Like Healthcare Data**
+- Realistic patient demographics with Singapore-specific data patterns
+- Comprehensive medical histories spanning multiple care episodes
+- Authentic clinical terminologies (SNOMED CT, ICD-10, LOINC)
+- Multi-ethnic patient populations reflecting Singapore demographics
 
-```bash
-npm run build
-```
+#### 🔗 **EPIC API Interface Simulation**
+- FHIR R4 compliant endpoints matching EPIC patterns
+- Realistic API response times and pagination
+- Authentication flows similar to production NGEMR
+- Error handling patterns consistent with EPIC systems
 
-This will generate an optimized bundle for production.
+#### 🏢 **Multi-Tenant Healthcare Environment**
+- Simulated healthcare organizations and facilities
+- Provider hierarchies and departmental structures
+- Realistic appointment scheduling across multiple locations
+- Cross-facility patient data sharing scenarios
 
-### Preview the Production Build
+#### 🔍 **Advanced Search & Filtering**
+- FHIR-compliant search parameters
+- Complex queries with multiple criteria
+- Pagination and sorting capabilities
+- Real-time search result updates
 
-```bash
-npm run preview
-```
+#### 📑 **Tab-Based Navigation System**
+- Browser-like tabbed interface for clinical workflows
+- Multi-tab support for patient and practitioner records
+- Closable tabs with "×" functionality
+- Active tab tracking and state persistence
+- Dynamic tab content loading based on resource type
+
+### Healthcare Scenarios Covered
+
+- **Primary Care Visits** - Routine checkups, preventive care, vaccinations
+- **Specialist Consultations** - Cardiology, endocrinology, oncology workflows
+- **Emergency Department** - Acute care scenarios, triage workflows
+- **Chronic Disease Management** - Diabetes, hypertension, heart disease tracking
+- **Laboratory Integration** - Lab orders, results reporting, critical value alerts
+- **Medication Management** - Prescription workflows, drug interaction checks
+- **Preventive Care** - Screening programs, health maintenance
+
+### Advanced UI Features
+
+#### **Tab-Based Navigation System**
+The sandbox implements a sophisticated tab-based navigation system for enhanced clinical workflows:
+
+- **Multi-Resource Tabs**: Open multiple Patient and Practitioner records simultaneously
+- **Browser-Like Experience**: Familiar tabbed interface with closable tabs
+- **State Management**: Tab state persistence through Redux for consistent user experience
+- **Dynamic Content Loading**: Tabs load content dynamically based on resource type and ID
+- **SideMenu Integration**: SideMenu items now open tabs instead of traditional page navigation
+
+**Tab Types Supported:**
+- Patient List Tab - Browse and search patient records
+- Patient Profile Tab - Detailed patient information with specific resource ID
+- Practitioner List Tab - Browse and search healthcare provider records
+- Practitioner Profile Tab - Detailed practitioner information with specific resource ID
+
+#### **Comprehensive Practitioner Management**
+Full-featured practitioner management system mirroring the patient management capabilities:
+
+**Core Features:**
+- **FHIR R4B Compliant**: Complete Practitioner resource support with proper FHIR structure
+- **Full CRUD Operations**: Create, Read, Update, Delete practitioner records
+- **Professional Specialties**: 16 predefined medical specialties with custom entry support
+- **Advanced Form System**: Multi-section registration form with validation
+- **Search & Filter**: FHIR-compliant search with multiple criteria
+
+**Supported Specialties:**
+Internal Medicine, Cardiology, Emergency Medicine, Family Medicine, Pediatrics, Surgery, Orthopedics, Neurology, Psychiatry, Radiology, Anesthesiology, Pathology, Medical Doctor, Certified Nurse Practitioner, Registered Nurse, Physical Therapist
+
+**Form Sections:**
+- Name Information (Given Name, Family Name)
+- Basic Information (Birth Date, Gender, Active Status)
+- Contact Information (Work Phone, Work Email)
+- Address Information (Full address with city, state, postal code, country)
+- Professional Qualification (Primary specialty with custom entry support)
 
 ---
 
-## 8. Deployment
+## 3. Environment Configuration
 
-To deploy to the User Apps Platform:
+The sandbox uses environment-specific configurations to simulate different NGEMR deployment scenarios.
 
-1. **Build the Application for Production**
-
-```bash
-npm run build
-```
-
-2. **Prepare for Upload**
-
-Zip the contents of the `dist` folder:
+### Development Environment Setup
 
 ```bash
-zip -r dist.zip dist
+# Copy and customize environment file
+cp env/.env.development.sample env/.env.development.local
 ```
 
-3. **Upload to the User Apps Platform**
-
-Log in to the [User Apps Platform](https://developer.healthx.sg/userapp) and upload the `dist.zip` file.
-
----
-
-## 9. SmartOnFHIR Integration
-
-This application includes support for launching Smart Apps within your User App via our SmartOnFHIR enablement. This allows you to embed external healthcare applications that can access patient data through a standardized protocol that defined by [HL7 SMART App Launch](https://hl7.org/fhir/smart-app-launch/app-launch.html).
-
-### Prerequisites
-
-Before using the SmartOnFHIR integration, ensure you have:
-
-1. **A Provisioned User App**: This is the primary application from which you'll launch the Smart App.
-
-2. **A Target Resource Endpoint**: This is the FHIR service endpoint the Smart App will access data from. It can be the same user app you're launching from or a different User App.
-
-3. **A Smart App Launcher Configuration**: Created on the Smart App Gallery platform to configure identity federation between your primary and target systems. This configuration establishes trust relationships that enable single sign-on (SSO) capabilities, allowing users to seamlessly launch Smart Apps without re-authentication.
-
-#### Setting Up a Smart App Launcher
-
-1. **Access the Smart App Gallery**: Visit [HealthX Smart Apps Gallery](https://smartapps.healthx.sg)
-
-2. **Select the Smart App you want to integrate with your User App**
-
-3. **Register a new Launcher**:
-
-- Select register via dropdown![alt text](public/register-launcher-1.png)
-
-- Configure primary and target systems![alt text](public/register-launcher-2.png)
-
-4. **Obtain Launcher Details**: After configuration, you'll receive:
-   - Smart App Base URL
-   - Launch Token URL
-   - FHIR Resource Base URL
-
-### Environment Configuration
-
-Add the following environment variables to your configuration:
+### Key Configuration Variables
 
 ```plaintext
-# Smart App Launch configuration
-VITE_SMART_LAUNCH_TOKEN_URL='https://auth.healthx.sg/launch'
-VITE_SMART_APP_BASE_URL='https://smartapps.healthx.sg/app/example-app'
-VITE_SMART_FHIR_RESOURCE_BASE_URL='https://api.healthx.sg/fhir/r4b/tenant-123'
+# Sandbox Application Configuration
+VITE_APP_TITLE='NGEMR Integration Sandbox'
+VITE_APP_BASE_URL='/sandbox'
+VITE_APP_ID='ngemr-sandbox-001'
+
+# Mock FHIR API Configuration  
+VITE_FHIR_API_BASE_URL='http://localhost:3000/api/fhir/r4'
+VITE_FHIR_API_KEY='sandbox-api-key'
+
+# Sandbox Authentication (for development)
+VITE_OIDC_AUTHORITY='http://localhost:3000/auth'
+VITE_OIDC_CLIENT_ID='ngemr-sandbox-client'
+VITE_OIDC_REDIRECT_URI='http://localhost:3000/sandbox/callback'
+
+# Optional: SmartOnFHIR Testing
+VITE_SMART_LAUNCH_TOKEN_URL='http://localhost:3000/auth/smart/launch'
+VITE_SMART_APP_BASE_URL='http://localhost:3000/smart-apps'
+VITE_SMART_FHIR_RESOURCE_BASE_URL='http://localhost:3000/api/fhir/r4'
 ```
 
-### Implementing Smart App Launch
+### Environment Validation
 
-The application provides components to easily embed Smart Apps in your User App:
+All environment variables are validated at build time using Zod schemas to ensure data integrity and prevent configuration errors common in healthcare applications.
 
-#### Using the SmartApp Component
+---
+
+## 4. FHIR Resource Coverage
+
+The sandbox provides comprehensive coverage of NGEMR-relevant FHIR resources:
+
+### Core Patient Data
+- **Patient** - Demographics, identifiers, contact information, emergency contacts
+- **RelatedPerson** - Next of kin, caregivers, emergency contacts
+- **Practitioner** - Healthcare providers with full CRUD operations, 16 predefined specialties, custom specialty support
+- **PractitionerRole** - Provider assignments, schedules, locations
+
+### Clinical Data
+- **Observation** - Vital signs, lab results, clinical measurements, scores
+- **Condition** - Diagnoses, problems, medical conditions with severity
+- **Procedure** - Surgeries, treatments, interventions with outcomes
+- **MedicationRequest** - Prescriptions, dosing, administration instructions
+- **MedicationStatement** - Current medications, adherence, effectiveness
+- **AllergyIntolerance** - Drug allergies, environmental sensitivities, reactions
+
+### Care Coordination
+- **Encounter** - Hospital visits, consultations, care episodes
+- **Appointment** - Scheduling, provider availability, patient preferences
+- **CarePlan** - Treatment plans, goals, care team coordination
+- **ServiceRequest** - Lab orders, referrals, diagnostic requests
+
+### Administrative
+- **Organization** - Hospitals, clinics, departments, care networks
+- **Location** - Facilities, rooms, service areas
+- **Coverage** - Insurance, health plans, authorization
+- **Account** - Billing, financial responsibility
+
+---
+
+## 5. Development Workflow
+
+### Core Development Commands
+
+```bash
+# Start development server with hot reloading
+npm run dev
+
+# Build for testing/staging
+npm run build
+
+# Run comprehensive test suite
+npm run test
+
+# Type checking and linting
+npm run type-check
+npm run lint
+
+# Format code to healthcare standards
+npm run format
+```
+
+### Feature Development Process
+
+1. **Create NGEMR Feature Module**
+   ```bash
+   mkdir -p src/features/[ResourceName]/{components,hooks,services,types}
+   ```
+
+2. **Implement FHIR Service**
+   ```typescript
+   // src/services/[Resource]/[Resource]Service.ts
+   export const resourceApi = createApi({
+     endpoints: (builder) => ({
+       getResourceList: builder.query(),
+       createResource: builder.mutation(),
+       updateResource: builder.mutation(),
+       deleteResource: builder.mutation(),
+     })
+   });
+   ```
+
+3. **Add Tab Integration** (for new FHIR resources)
+   ```typescript
+   // Update src/common/hooks/useTabs.ts
+   export const useResourceTabs = () => ({
+     openResourceListTab: () => { /* Implementation */ },
+     openResourceProfileTab: (id: string, name: string) => { /* Implementation */ }
+   });
+   ```
+
+4. **Add Mock Data Generator**
+   ```typescript
+   // Generate realistic healthcare data
+   export const generateMockPatients = (count: number) => { ... }
+   ```
+
+5. **Create UI Components**
+   ```typescript
+   // Healthcare-specific UI patterns with tab support
+   export const ResourceListPage = () => { /* Tab-enabled list view */ }
+   export const ResourceProfilePage = () => { /* Tab-enabled detail view */ }
+   ```
+
+6. **Write Integration Tests**
+   ```typescript
+   // Test FHIR compliance and data integrity
+   describe('Patient Service', () => { ... })
+   ```
+
+---
+
+## 6. EPIC API Compatibility
+
+### API Response Patterns
+
+The sandbox mimics EPIC's specific FHIR implementation patterns:
 
 ```typescript
-import SmartApp from '@/features/Patient/components/PatientSmartApp/SmartApp';
-import { useAuth } from 'react-oidc-context';
-import { fetchLaunchToken } from 'smartonfhir-launcher-react';
+// EPIC-style Bundle response
+{
+  "resourceType": "Bundle",
+  "id": "epic-search-result",
+  "type": "searchset",
+  "total": 150,
+  "link": [
+    {
+      "relation": "self",
+      "url": "Patient?_count=20&_offset=0"
+    }
+  ],
+  "entry": [
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "epic-patient-123",
+        "identifier": [
+          {
+            "system": "urn:oid:2.16.840.1.113883.3.42.10001.100001.12",
+            "value": "NRIC123456789"
+          }
+        ]
+        // ... rest of patient data
+      }
+    }
+  ]
+}
+```
 
-const YourComponent = () => {
-  const { user } = useAuth();
+### Authentication Flow
 
-  // Callback to resolve the launch token
-  const launchToken = useCallback(
-    (context) =>
-      fetchLaunchToken(import.meta.env.VITE_SMART_LAUNCH_TOKEN_URL!, context, {
-        Authorization: `Bearer ${user?.access_token}`,
-      }),
-    [user?.access_token],
-  );
-
-  return (
-    <div className="h-[70vh] w-full">
-      <SmartApp
-        baseUrl={import.meta.env.VITE_SMART_APP_BASE_URL!}
-        iss={import.meta.env.VITE_SMART_FHIR_RESOURCE_BASE_URL!}
-        launchContext={{
-          patientPrn: "patient-identifier", // Patient identifier
-          need_patient_banner: true,
-          sso_token: user?.access_token,
-        }}
-        launchToken={launchToken}
-      />
-    </div>
-  );
+```typescript
+// EPIC OAuth2 flow simulation
+const authenticateWithEpic = async () => {
+  const response = await fetch('/auth/epic/authorize', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    body: 'grant_type=client_credentials&scope=patient/*.read'
+  });
+  return response.json();
 };
 ```
 
-### Launch Flow Explanation
+### Search Parameters
 
-The SmartOnFHIR launch process works as follows:
-
-1. **Initialize Launch**: When a user accesses a page with an embedded Smart App, the `SmartApp` component begins the launch process.
-
-2. **Context Preparation**: The component prepares a launch context containing:
-
-   - Patient identifier (if applicable)
-   - User's authentication token
-   - Other required context parameters
-
-3. **Token Acquisition**: The component calls the launch token endpoint with the prepared context to get a one-time use launch token.
-
-4. **App Launch**: The Smart App is loaded in an iframe with the launch token, enabling it to access the FHIR resources it needs without requiring the user to authenticate again.
-
-5. **Data Access**: The Smart App uses the launch token to obtain an access token to the FHIR API and then retrieves the necessary patient data.
-
-This flow enables a seamless user experience where a patient's data can be accessed by specialized applications without disrupting the user's workflow or requiring multiple sign-in steps.
+EPIC-compatible search patterns:
+```typescript
+// Complex patient search
+const searchPatients = {
+  'given': 'John',
+  'family': 'Doe',
+  'identifier': 'NRIC|S1234567A',
+  '_count': '50',
+  '_offset': '0'
+};
+```
 
 ---
 
-## 10. Additional Notes
+## 7. Testing & Validation
 
-- **FHIR Integration**: This sample app accesses FHIRNexus APIs through the `fhirclient` library. Ensure environment variables for API endpoints and authentication are correctly configured.
+### Test Strategy
 
-- **Development Tools**:
+```bash
+# Run all tests including FHIR validation
+npm run test
 
-  - `eslint` and `prettier` are configured for code quality and formatting
-  - `husky` and `lint-staged` are set up to ensure code quality on commit
-  - `source-map-explorer` helps analyze bundle size with `npm run analyze`
+# Generate coverage report
+npm run test:coverage
 
-- **Documentation**: Additional developer documentation is available in the `/docs` directory, including guides on project structure and template features.
+# Run FHIR resource validation
+npm run test:fhir-validation
+```
 
-- **For issues or contributions**: Please open an issue or pull request on the project repository.
+### FHIR Compliance Testing
+
+The sandbox includes comprehensive FHIR validation:
+
+```typescript
+import { validateFhirResource } from '@/utils/fhir-validation';
+
+test('Patient resource complies with FHIR R4', () => {
+  const patient = generateMockPatient();
+  const validation = validateFhirResource(patient, 'Patient');
+  expect(validation.isValid).toBe(true);
+});
+```
+
+### Integration Testing Scenarios
+
+- **Patient Registration Flow** - Complete patient onboarding
+- **Clinical Data Exchange** - Lab results, observations, conditions
+- **Appointment Management** - Scheduling, modifications, cancellations
+- **Medication Workflows** - Prescriptions, dispensing, administration
+- **Emergency Care** - Acute care scenarios with complete data sets
+
+---
+
+## 8. Deployment Options
+
+### Local Development
+```bash
+npm run dev
+# Sandbox available at http://localhost:3000
+```
+
+### Shared Team Environment
+```bash
+npm run build-staging
+# Deploy to shared staging environment for team collaboration
+```
+
+### Demo/Presentation Environment
+```bash
+npm run build-production
+# Production-optimized build for stakeholder demonstrations
+```
+
+### Docker Deployment
+```dockerfile
+FROM node:18-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --only=production
+COPY dist ./dist
+EXPOSE 3000
+CMD ["npm", "run", "preview"]
+```
+
+---
+
+## 9. POC/POV Use Cases
+
+### Proof-of-Concept Scenarios
+
+#### **Clinical Decision Support Integration**
+- Implement drug interaction checking against NGEMR medication data
+- Test clinical alerts and recommendations workflows using tab-based UI
+- Validate care gap identification algorithms with multi-patient tab views
+
+#### **Population Health Analytics**
+- Aggregate patient data across demographics and conditions
+- Test chronic disease management dashboards
+- Validate public health reporting mechanisms
+
+#### **Mobile Health App Integration**
+- Connect patient-facing apps to NGEMR data
+- Test remote monitoring data ingestion
+- Validate patient portal functionality
+
+### Proof-of-Value Demonstrations
+
+#### **Workflow Optimization**
+- Demonstrate reduced clinical documentation time with tab-based navigation
+- Show improved care coordination between providers using practitioner management
+- Quantify medication reconciliation improvements with multi-resource tab views
+
+#### **Clinical Outcomes**
+- Track patient outcome improvements with new tools
+- Measure care quality indicators and metrics
+- Demonstrate population health improvements
+
+#### **Operational Efficiency**
+- Show reduced duplicate testing and procedures
+- Measure appointment scheduling optimization
+- Quantify administrative burden reduction
+
+---
+
+## 10. Contributing
+
+### Contributing to NGEMR Sandbox
+
+We welcome contributions that enhance the sandbox's realism and utility for NGEMR integration development.
+
+#### **Priority Contribution Areas**
+- **New FHIR Resources** - Additional healthcare data types
+- **Singapore-Specific Patterns** - Local healthcare system nuances  
+- **EPIC API Updates** - Latest EPIC FHIR implementation patterns
+- **Clinical Scenarios** - More realistic healthcare workflows
+- **Testing Utilities** - Enhanced validation and testing tools
+
+#### **Contribution Guidelines**
+1. **Healthcare Data Accuracy** - Ensure medical accuracy in mock data
+2. **FHIR Compliance** - Maintain strict FHIR R4 compliance
+3. **Singapore Context** - Reflect local healthcare patterns and regulations
+4. **Documentation** - Comprehensive documentation for new features
+5. **Testing** - Include tests for all new functionality
+
+#### **Getting Started with Contributions**
+```bash
+# Fork and clone the repository
+git clone https://github.com/your-username/HXIS-Integration-Sandbox
+cd HXIS-Integration-Sandbox
+
+# Create feature branch
+git checkout -b feature/new-fhir-resource
+
+# Make changes and test
+npm run test
+npm run lint
+
+# Submit pull request with detailed description
+```
+
+---
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+## Support & Documentation
+
+- **Technical Support**: Open an issue on GitHub for technical questions
+- **Healthcare Integration Guidance**: Refer to FHIR R4 documentation and EPIC implementation guides
+- **Training Materials**: Additional tutorials and examples available in `/docs` directory
+- **Community**: Join our healthcare developer community for best practices and collaboration
+
+---
+
+*The HXIS Integration Sandbox is a development tool designed to accelerate NGEMR integration projects. It provides realistic healthcare data and EPIC-compatible APIs for safe development and testing environments.*

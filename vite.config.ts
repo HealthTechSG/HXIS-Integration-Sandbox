@@ -20,11 +20,9 @@ export default defineConfig(({ mode }) => {
   process.env.VITE_GIT_COMMIT_HASH = gitCommitHash;
 
   return {
-    // base:
-    //   (mode === 'production' ? '/apps' : env.VITE_APP_BASE_URL) +
-    //   '/' +
-    //   env.VITE_APP_ID,
-    base: '/',
+    base: mode === 'production' 
+      ? `/apps/${env.VITE_APP_ID}`
+      : '/',
     plugins: [
       react(),
       [
