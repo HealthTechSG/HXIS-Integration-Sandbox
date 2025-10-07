@@ -18,7 +18,7 @@ const SideMenuSider: React.FC<SideMenuSiderProps> = ({
   setCollapsed,
 }) => {
   const { activeTabId } = useSelector((state: RootState) => state.tabs);
-  const { openPatientListTab, openPractitionerListTab, openLocationListTab, openListListTab } = useTabs();
+  const { openPatientListTab, openPractitionerListTab, openLocationListTab, openMedicationListTab, openListListTab } = useTabs();
 
   const handleMenuClick = (info: any) => {
     switch (info.key) {
@@ -30,6 +30,9 @@ const SideMenuSider: React.FC<SideMenuSiderProps> = ({
         break;
       case 'location-list':
         openLocationListTab();
+        break;
+      case 'medication-list':
+        openMedicationListTab();
         break;
       case 'list-list':
         openListListTab();
@@ -70,6 +73,7 @@ const SideMenuSider: React.FC<SideMenuSiderProps> = ({
           activeTabId.startsWith('patient-') ? 'patient-list' :
           activeTabId.startsWith('practitioner-') ? 'practitioner-list' :
           activeTabId.startsWith('location-') ? 'location-list' :
+          activeTabId.startsWith('medication-') ? 'medication-list' :
           activeTabId.startsWith('list-') ? 'list-list' :
           ''
         ] : []}

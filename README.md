@@ -460,6 +460,19 @@ npm run build-production
 # Production-optimized build for stakeholder demonstrations
 ```
 
+### Deployment to Developer Portal
+```bash
+npm run build
+
+# Install zip comment for WSL if not available
+sudo apt install zip
+
+# Zip the built dist folder
+zip -r dist.zip dist
+
+# Upload to Developer Portal
+```
+
 ### Docker Deployment
 ```dockerfile
 FROM node:18-alpine

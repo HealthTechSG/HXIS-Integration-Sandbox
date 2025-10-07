@@ -31,6 +31,12 @@ const RouteMap = {
     LocationProfile: '/location/:id',
   },
 
+  //* Medication CRUD ----------------------------------------------------------
+  MedicationPaths: {
+    MedicationList: '/medication',
+    MedicationProfile: '/medication/:id',
+  },
+
   //* List CRUD ----------------------------------------------------------------
   ListPaths: {
     ListList: '/list',

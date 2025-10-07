@@ -57,6 +57,16 @@ export const useTabs = () => {
     dispatch(addTab(tab));
   };
 
+  const openMedicationListTab = () => {
+    const tab: TabItem = {
+      id: 'medication-list',
+      label: 'Medication List',
+      closable: true,
+      componentType: 'MedicationListPage',
+    };
+    dispatch(addTab(tab));
+  };
+
   const openListListTab = () => {
     const tab: TabItem = {
       id: 'list-list',
@@ -85,6 +95,7 @@ export const useTabs = () => {
     openPractitionerListTab,
     openPractitionerProfileTab,
     openLocationListTab,
+    openMedicationListTab,
     openListListTab,
     closeTab,
     switchTab,

@@ -4,6 +4,7 @@ import { LoginRoutes } from './Login';
 import type { BasePageRouteObject } from '@/common/types';
 import { PatientRoutes } from './Patient';
 import { LocationRoutes } from './Location';
+import { MedicationRoutes } from './Medication';
 import { ListRoutes } from './List';
 
 const ROUTES: BasePageRouteObject[] = [
@@ -15,6 +16,9 @@ const ROUTES: BasePageRouteObject[] = [
 
   // Location
   ...LocationRoutes,
+
+  // Medication
+  ...MedicationRoutes,
 
   // List
   ...ListRoutes,

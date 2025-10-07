@@ -1,26 +1,29 @@
-import React from 'react';
+import {
+  UserOutlined,
+} from '@ant-design/icons';
 import {
   Row,
   Col,
-  Card,
   Avatar,
   Typography,
   Tabs,
   Spin,
   Alert,
 } from 'antd';
-import {
-  UserOutlined,
-} from '@ant-design/icons';
 import moment from 'moment';
-import ObservationTab from './ObservationTab';
+import React from 'react';
+
 import AllergyIntoleranceTab from './AllergyIntoleranceTab';
+import AppointmentTab from './AppointmentTab';
 import ConditionTab from './ConditionTab';
-import ProcedureTab from './ProcedureTab';
+import EncounterTab from './EncounterTab';
 import FlagTab from './FlagTab';
+import MedicationRequestTab from './MedicationRequestTab';
+import ObservationTab from './ObservationTab';
+import ProcedureTab from './ProcedureTab';
 import { useGetPatientByIdQuery } from '@/services/Patient/PatientService';
 
-const { Title, Text } = Typography;
+const { Title } = Typography;
 
 interface PatientProfilePageProps {
   patientId?: string;
@@ -28,12 +31,12 @@ interface PatientProfilePageProps {
 
 const PatientProfilePage: React.FC<PatientProfilePageProps> = ({ patientId }) => {
   // Fetch patient data from FHIR API
-  const { data: patient, isLoading, error } = useGetPatientByIdQuery(patientId || '');
+  const { data: patient, error, isLoading } = useGetPatientByIdQuery(patientId || '');
 
   // Handle loading state
   if (isLoading) {
     return (
-      <div className="bg-gray-100 rounded-tl-lg min-h-full flex items-center justify-center">
+      <div className="flex min-h-full items-center justify-center rounded-tl-lg bg-gray-100">
         <Spin size="large" tip="Loading patient information...">
           <div className="min-h-[200px]" />
         </Spin>
@@ -44,12 +47,12 @@ const PatientProfilePage: React.FC<PatientProfilePageProps> = ({ patientId }) =>
   // Handle error state
   if (error || !patient) {
     return (
-      <div className="bg-gray-100 rounded-tl-lg min-h-full p-4">
+      <div className="min-h-full rounded-tl-lg bg-gray-100 p-4">
         <Alert
-          message="Error Loading Patient"
           description="Unable to load patient information. Please check the patient ID and try again."
-          type="error"
+          message="Error Loading Patient"
           showIcon
+          type="error"
         />
       </div>
     );
@@ -60,16 +63,16 @@ const PatientProfilePage: React.FC<PatientProfilePageProps> = ({ patientId }) =>
 
 
   return (
-    <div className="bg-gray-100 rounded-tl-lg min-h-full">
+    <div className="min-h-full rounded-tl-lg bg-gray-100">
       {/* === EPIC-Style Patient Banner === */}
-      <div className="bg-blue-900 text-white p-3 px-4 rounded-tl-lg">
-        <Row gutter={16} align="middle">
+      <div className="rounded-tl-lg bg-blue-900 p-3 px-4 text-white">
+        <Row align="middle" gutter={16}>
           <Col>
-            <Avatar size={64} icon={<UserOutlined />} className="bg-blue-500" />
+            <Avatar className="bg-blue-500" icon={<UserOutlined />} size={64} />
           </Col>
           <Col flex="auto">
-            <div className="flex items-center gap-3 mb-1">
-              <Title level={4} className="m-0 text-white text-lg">
+            <div className="mb-1 flex items-center gap-3">
+              <Title className="m-0 text-lg text-white" level={4}>
                 {patient.name}
               </Title>
             </div>
@@ -89,10 +92,8 @@ const PatientProfilePage: React.FC<PatientProfilePageProps> = ({ patientId }) =>
       {/* === EPIC-Style Clinical Tabs === */}
       <div className="border-b border-gray-300" style={{ backgroundColor: '#eef7ff' }}>
         <Tabs
-          defaultActiveKey="observations"
-          size="large"
           className="mx-4"
-          tabBarStyle={{ marginBottom: 0, backgroundColor: '#eef7ff' }}
+          defaultActiveKey="observations"
           items={[
             {
               key: 'observations',
@@ -122,6 +123,15 @@ const PatientProfilePage: React.FC<PatientProfilePageProps> = ({ patientId }) =>
               ),
             },
             {
+              key: 'medication-requests',
+              label: 'Medication Requests',
+              children: (
+                <div className="bg-white">
+                  <MedicationRequestTab patientId={patient.id} />
+                </div>
+              ),
+            },
+            {
               key: 'procedures',
               label: 'Procedures',
               children: (
@@ -143,14 +153,23 @@ const PatientProfilePage: React.FC<PatientProfilePageProps> = ({ patientId }) =>
               key: 'encounters',
               label: 'Encounters',
               children: (
-                <div className="p-4 bg-white">
-                  <Card>
-                    <Text>Visit history and encounters...</Text>
-                  </Card>
+                <div className="bg-white">
+                  <EncounterTab patientId={patient.id} />
+                </div>
+              ),
+            },
+            {
+              key: 'appointments',
+              label: 'Appointments',
+              children: (
+                <div className="bg-white">
+                  <AppointmentTab patientId={patient.id} />
                 </div>
               ),
             },
           ]}
+          size="large"
+          tabBarStyle={{ marginBottom: 0, backgroundColor: '#eef7ff' }}
         />
       </div>
     </div>

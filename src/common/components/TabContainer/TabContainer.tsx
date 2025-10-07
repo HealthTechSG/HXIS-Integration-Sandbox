@@ -6,6 +6,7 @@ import { removeTab, setActiveTab } from '@/redux/slice/tabs';
 import { PatientListPage, PatientProfilePage } from '@/features/Patient/components';
 import { PractitionerListPage, PractitionerProfilePage } from '@/features/Practitioner/components';
 import { LocationListPage } from '@/features/Location/components';
+import { MedicationListPage } from '@/features/Medication/components';
 import { ListListPage } from '@/features/List/components';
 
 const TabContainer: React.FC = () => {
@@ -35,6 +36,8 @@ const TabContainer: React.FC = () => {
         return PractitionerProfilePage;
       case 'LocationListPage':
         return LocationListPage;
+      case 'MedicationListPage':
+        return MedicationListPage;
       case 'ListListPage':
         return ListListPage;
       default:

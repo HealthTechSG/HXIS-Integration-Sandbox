@@ -25,6 +25,10 @@ const SIDE_MENU_ITEMS: MenuItem[] = [
     label: 'Location List',
   },
   {
+    key: 'medication-list',
+    label: 'Medication List',
+  },
+  {
     key: 'list-list',
     label: 'List Management',
   },
