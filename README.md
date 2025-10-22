@@ -47,7 +47,7 @@ This sandbox utilizes modern web technologies optimized for healthcare developme
 - **[Tailwind CSS](https://tailwindcss.com/)**: Utility-first styling for healthcare UIs
 - **[Ant Design](https://ant.design/)**: Enterprise-grade UI components for medical applications
 - **[React OIDC Context](https://www.npmjs.com/package/react-oidc-context)**: Healthcare-grade authentication
-- **[FHIRClient](https://github.com/smart-on-fhir/client-js)**: Standard FHIR R4 API interactions
+- **[FHIRClient](https://github.com/smart-on-fhir/client-js)**: Standard FHIR API interactions
 - **[Redux Toolkit](https://redux-toolkit.js.org/rtk-query/overview)**: State management with RTK Query for API caching and tab management
 - **[Zod](https://github.com/colinhacks/zod)**: Runtime type validation for healthcare data integrity
 - **[Vitest](https://vitest.dev/)**: Fast unit testing framework
@@ -68,15 +68,10 @@ This sandbox is designed for:
 ## Table of Contents
 
 1. [Getting Started](#1-getting-started)
-2. [NGEMR Sandbox Features](#2-ngemr-sandbox-features)
-3. [Environment Configuration](#3-environment-configuration)
-4. [FHIR Resource Coverage](#4-fhir-resource-coverage)
-5. [Development Workflow](#5-development-workflow)
-6. [Epic API Compatibility](#6-Epic-api-compatibility)
-7. [Testing & Validation](#7-testing--validation)
-8. [Deployment Options](#8-deployment-options)
-9. [POC/POV Use Cases](#9-pocpov-use-cases)
-10. [Contributing](#10-contributing)
+2. [Environment Configuration](#2-environment-configuration)
+3. [Development Workflow](#3-development-workflow)
+4. [Epic API Compatibility](#4-Epic-api-compatibility)
+5. [Deployment Options](#5-deployment-options)
 
 ---
 
@@ -122,91 +117,7 @@ The sandbox will be available at `http://localhost:3000` with a full NGEMR-like 
 
 ---
 
-## 2. NGEMR Sandbox Features
-
-### Core Capabilities
-
-#### 🏥 **Production-Like Healthcare Data**
-- Realistic patient demographics with Singapore-specific data patterns
-- Comprehensive medical histories spanning multiple care episodes
-- Authentic clinical terminologies (SNOMED CT, ICD-10, LOINC)
-- Multi-ethnic patient populations reflecting Singapore demographics
-
-#### 🔗 **Epic API Interface Simulation**
-- FHIR R4 compliant endpoints matching Epic patterns
-- Realistic API response times and pagination
-- Authentication flows similar to production NGEMR
-- Error handling patterns consistent with Epic systems
-
-#### 🏢 **Multi-Tenant Healthcare Environment**
-- Simulated healthcare organizations and facilities
-- Provider hierarchies and departmental structures
-- Realistic appointment scheduling across multiple locations
-- Cross-facility patient data sharing scenarios
-
-#### 🔍 **Advanced Search & Filtering**
-- FHIR-compliant search parameters
-- Complex queries with multiple criteria
-- Pagination and sorting capabilities
-- Real-time search result updates
-
-#### 📑 **Tab-Based Navigation System**
-- Browser-like tabbed interface for clinical workflows
-- Multi-tab support for patient and practitioner records
-- Closable tabs with "×" functionality
-- Active tab tracking and state persistence
-- Dynamic tab content loading based on resource type
-
-### Healthcare Scenarios Covered
-
-- **Primary Care Visits** - Routine checkups, preventive care, vaccinations
-- **Specialist Consultations** - Cardiology, endocrinology, oncology workflows
-- **Emergency Department** - Acute care scenarios, triage workflows
-- **Chronic Disease Management** - Diabetes, hypertension, heart disease tracking
-- **Laboratory Integration** - Lab orders, results reporting, critical value alerts
-- **Medication Management** - Prescription workflows, drug interaction checks
-- **Preventive Care** - Screening programs, health maintenance
-
-### Advanced UI Features
-
-#### **Tab-Based Navigation System**
-The sandbox implements a sophisticated tab-based navigation system for enhanced clinical workflows:
-
-- **Multi-Resource Tabs**: Open multiple Patient and Practitioner records simultaneously
-- **Browser-Like Experience**: Familiar tabbed interface with closable tabs
-- **State Management**: Tab state persistence through Redux for consistent user experience
-- **Dynamic Content Loading**: Tabs load content dynamically based on resource type and ID
-- **SideMenu Integration**: SideMenu items now open tabs instead of traditional page navigation
-
-**Tab Types Supported:**
-- Patient List Tab - Browse and search patient records
-- Patient Profile Tab - Detailed patient information with specific resource ID
-- Practitioner List Tab - Browse and search healthcare provider records
-- Practitioner Profile Tab - Detailed practitioner information with specific resource ID
-
-#### **Comprehensive Practitioner Management**
-Full-featured practitioner management system mirroring the patient management capabilities:
-
-**Core Features:**
-- **FHIR R4B Compliant**: Complete Practitioner resource support with proper FHIR structure
-- **Full CRUD Operations**: Create, Read, Update, Delete practitioner records
-- **Professional Specialties**: 16 predefined medical specialties with custom entry support
-- **Advanced Form System**: Multi-section registration form with validation
-- **Search & Filter**: FHIR-compliant search with multiple criteria
-
-**Supported Specialties:**
-Internal Medicine, Cardiology, Emergency Medicine, Family Medicine, Pediatrics, Surgery, Orthopedics, Neurology, Psychiatry, Radiology, Anesthesiology, Pathology, Medical Doctor, Certified Nurse Practitioner, Registered Nurse, Physical Therapist
-
-**Form Sections:**
-- Name Information (Given Name, Family Name)
-- Basic Information (Birth Date, Gender, Active Status)
-- Contact Information (Work Phone, Work Email)
-- Address Information (Full address with city, state, postal code, country)
-- Professional Qualification (Primary specialty with custom entry support)
-
----
-
-## 3. Environment Configuration
+## 2. Environment Configuration
 
 The sandbox uses environment-specific configurations to simulate different NGEMR deployment scenarios.
 
@@ -217,68 +128,7 @@ The sandbox uses environment-specific configurations to simulate different NGEMR
 cp env/.env.development.sample env/.env.development.local
 ```
 
-### Key Configuration Variables
-
-```plaintext
-# Sandbox Application Configuration
-VITE_APP_TITLE='NGEMR Integration Sandbox'
-VITE_APP_BASE_URL='/sandbox'
-VITE_APP_ID='ngemr-sandbox-001'
-
-# Mock FHIR API Configuration  
-VITE_FHIR_API_BASE_URL='http://localhost:3000/api/fhir/r4'
-VITE_FHIR_API_KEY='sandbox-api-key'
-
-# Sandbox Authentication (for development)
-VITE_OIDC_AUTHORITY='http://localhost:3000/auth'
-VITE_OIDC_CLIENT_ID='ngemr-sandbox-client'
-VITE_OIDC_REDIRECT_URI='http://localhost:3000/sandbox/callback'
-
-# Optional: SmartOnFHIR Testing
-VITE_SMART_LAUNCH_TOKEN_URL='http://localhost:3000/auth/smart/launch'
-VITE_SMART_APP_BASE_URL='http://localhost:3000/smart-apps'
-VITE_SMART_FHIR_RESOURCE_BASE_URL='http://localhost:3000/api/fhir/r4'
-```
-
-### Environment Validation
-
-All environment variables are validated at build time using Zod schemas to ensure data integrity and prevent configuration errors common in healthcare applications.
-
----
-
-## 4. FHIR Resource Coverage
-
-The sandbox provides comprehensive coverage of NGEMR-relevant FHIR resources:
-
-### Core Patient Data
-- **Patient** - Demographics, identifiers, contact information, emergency contacts
-- **RelatedPerson** - Next of kin, caregivers, emergency contacts
-- **Practitioner** - Healthcare providers with full CRUD operations, 16 predefined specialties, custom specialty support
-- **PractitionerRole** - Provider assignments, schedules, locations
-
-### Clinical Data
-- **Observation** - Vital signs, lab results, clinical measurements, scores
-- **Condition** - Diagnoses, problems, medical conditions with severity
-- **Procedure** - Surgeries, treatments, interventions with outcomes
-- **MedicationRequest** - Prescriptions, dosing, administration instructions
-- **MedicationStatement** - Current medications, adherence, effectiveness
-- **AllergyIntolerance** - Drug allergies, environmental sensitivities, reactions
-
-### Care Coordination
-- **Encounter** - Hospital visits, consultations, care episodes
-- **Appointment** - Scheduling, provider availability, patient preferences
-- **CarePlan** - Treatment plans, goals, care team coordination
-- **ServiceRequest** - Lab orders, referrals, diagnostic requests
-
-### Administrative
-- **Organization** - Hospitals, clinics, departments, care networks
-- **Location** - Facilities, rooms, service areas
-- **Coverage** - Insurance, health plans, authorization
-- **Account** - Billing, financial responsibility
-
----
-
-## 5. Development Workflow
+## 3. Development Workflow
 
 ### Core Development Commands
 
@@ -350,7 +200,7 @@ npm run format
 
 ---
 
-## 6. Epic API Compatibility
+## 4. Epic API Compatibility
 
 ### API Response Patterns
 
@@ -387,78 +237,7 @@ The sandbox mimics Epic's specific FHIR implementation patterns:
 }
 ```
 
-### Authentication Flow
-
-```typescript
-// Epic OAuth2 flow simulation
-const authenticateWithEpic = async () => {
-  const response = await fetch('/auth/Epic/authorize', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded'
-    },
-    body: 'grant_type=client_credentials&scope=patient/*.read'
-  });
-  return response.json();
-};
-```
-
-### Search Parameters
-
-Epic-compatible search patterns:
-```typescript
-// Complex patient search
-const searchPatients = {
-  'given': 'John',
-  'family': 'Doe',
-  'identifier': 'NRIC|S1234567A',
-  '_count': '50',
-  '_offset': '0'
-};
-```
-
----
-
-## 7. Testing & Validation
-
-### Test Strategy
-
-```bash
-# Run all tests including FHIR validation
-npm run test
-
-# Generate coverage report
-npm run test:coverage
-
-# Run FHIR resource validation
-npm run test:fhir-validation
-```
-
-### FHIR Compliance Testing
-
-The sandbox includes comprehensive FHIR validation:
-
-```typescript
-import { validateFhirResource } from '@/utils/fhir-validation';
-
-test('Patient resource complies with FHIR R4', () => {
-  const patient = generateMockPatient();
-  const validation = validateFhirResource(patient, 'Patient');
-  expect(validation.isValid).toBe(true);
-});
-```
-
-### Integration Testing Scenarios
-
-- **Patient Registration Flow** - Complete patient onboarding
-- **Clinical Data Exchange** - Lab results, observations, conditions
-- **Appointment Management** - Scheduling, modifications, cancellations
-- **Medication Workflows** - Prescriptions, dispensing, administration
-- **Emergency Care** - Acute care scenarios with complete data sets
-
----
-
-## 8. Deployment Options
+## 5. Deployment Options
 
 ### Local Development
 ```bash
@@ -502,84 +281,6 @@ EXPOSE 3000
 CMD ["npm", "run", "preview"]
 ```
 
----
-
-## 9. POC/POV Use Cases
-
-### Proof-of-Concept Scenarios
-
-#### **Clinical Decision Support Integration**
-- Implement drug interaction checking against NGEMR medication data
-- Test clinical alerts and recommendations workflows using tab-based UI
-- Validate care gap identification algorithms with multi-patient tab views
-
-#### **Population Health Analytics**
-- Aggregate patient data across demographics and conditions
-- Test chronic disease management dashboards
-- Validate public health reporting mechanisms
-
-#### **Mobile Health App Integration**
-- Connect patient-facing apps to NGEMR data
-- Test remote monitoring data ingestion
-- Validate patient portal functionality
-
-### Proof-of-Value Demonstrations
-
-#### **Workflow Optimization**
-- Demonstrate reduced clinical documentation time with tab-based navigation
-- Show improved care coordination between providers using practitioner management
-- Quantify medication reconciliation improvements with multi-resource tab views
-
-#### **Clinical Outcomes**
-- Track patient outcome improvements with new tools
-- Measure care quality indicators and metrics
-- Demonstrate population health improvements
-
-#### **Operational Efficiency**
-- Show reduced duplicate testing and procedures
-- Measure appointment scheduling optimization
-- Quantify administrative burden reduction
-
----
-
-## 10. Contributing
-
-### Contributing to NGEMR Sandbox
-
-We welcome contributions that enhance the sandbox's realism and utility for NGEMR integration development.
-
-#### **Priority Contribution Areas**
-- **New FHIR Resources** - Additional healthcare data types
-- **Singapore-Specific Patterns** - Local healthcare system nuances  
-- **Epic API Updates** - Latest Epic FHIR implementation patterns
-- **Clinical Scenarios** - More realistic healthcare workflows
-- **Testing Utilities** - Enhanced validation and testing tools
-
-#### **Contribution Guidelines**
-1. **Healthcare Data Accuracy** - Ensure medical accuracy in mock data
-2. **FHIR Compliance** - Maintain strict FHIR R4 compliance
-3. **Singapore Context** - Reflect local healthcare patterns and regulations
-4. **Documentation** - Comprehensive documentation for new features
-5. **Testing** - Include tests for all new functionality
-
-#### **Getting Started with Contributions**
-```bash
-# Fork and clone the repository
-git clone https://github.com/your-username/HXIS-Integration-Sandbox
-cd HXIS-Integration-Sandbox
-
-# Create feature branch
-git checkout -b feature/new-fhir-resource
-
-# Make changes and test
-npm run test
-npm run lint
-
-# Submit pull request with detailed description
-```
-
----
-
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
@@ -589,7 +290,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## Support & Documentation
 
 - **Technical Support**: Open an issue on GitHub for technical questions
-- **Healthcare Integration Guidance**: Refer to FHIR R4 documentation and Epic implementation guides
+- **Healthcare Integration Guidance**: Refer to FHIR documentation and Epic implementation guides
 - **Training Materials**: Additional tutorials and examples available in `/docs` directory
 - **Community**: Join our healthcare developer community for best practices and collaboration
 
