@@ -10,16 +10,10 @@ import { z } from 'zod';
 // =============================================================================
 const requiredSchema = {
   //* Application ==============================================================
-  // VITE_APP_BASE_URL is always "/apps" in production mode, to deploy on User Apps platform
-  VITE_APP_BASE_URL: z.preprocess(
-    (val) => {
-      if (process.env.NODE_ENV === 'production') return '/apps';
-      return val;
-    },
-    z.string().min(1, {
-      message: 'Base URL is required, e.g. /apps',
-    }),
-  ),
+  // VITE_APP_BASE_URL can be configured per environment (e.g., "/" or "/apps")
+  VITE_APP_BASE_URL: z.string().min(1, {
+    message: 'Base URL is required, e.g. / or /apps',
+  }),
   VITE_APP_TITLE: z.string().min(1, {
     message: 'App Title is required, e.g. Mini-EMR',
   }),

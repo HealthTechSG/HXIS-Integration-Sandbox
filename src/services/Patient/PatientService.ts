@@ -50,6 +50,7 @@ export const PatientApi = createApi({
       queryFn: async ({
         page = 0,
         pageSize = 10,
+        count,
         search,
         sortDirections = [],
         sortFields = [],
@@ -61,13 +62,22 @@ export const PatientApi = createApi({
           mapToFhirPatientSortFields,
         } = PatientMapperUtil;
 
+        // Build filters object with count if provided
+        const searchFilters: Record<string, any> = {
+          ...mapToFhirPatientFilters({ search, ...filters }),
+        };
+
+        if (count !== undefined) {
+          searchFilters._count = count;
+        }
+
         return client.searchResource<FhirPatient, Patient>({
           body: {
             resourceType: 'Patient',
             page,
             pageSize,
             sortFields: mapToFhirPatientSortFields(sortFields, sortDirections),
-            filters: mapToFhirPatientFilters({ search, ...filters }),
+            filters: searchFilters,
             resultFields: ['id', 'identifier', 'name', 'telecom', 'gender'],
           },
           mapFn: mapFromFhirPatient,

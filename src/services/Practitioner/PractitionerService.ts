@@ -29,12 +29,17 @@ export const PractitionerApi = createApi({
      */
     getPractitionerList: builder.query<PractitionerListResponse, GetPractitionerListParams>({
       query: (params: GetPractitionerListParams) => {
-        const fhirParams = PractitionerMapperUtil.mapSearchParamsToFhirParams({
+        const fhirParams: Record<string, any> = PractitionerMapperUtil.mapSearchParamsToFhirParams({
           search: params.search,
           active: params.active,
           specialty: params.specialty,
           pageSize: params.pageSize || 100,
         });
+
+        // Add count parameter if provided
+        if (params.count !== undefined) {
+          fhirParams._count = params.count;
+        }
 
         console.log('🔍 [PractitionerService] Fetching practitioner list with params:', fhirParams);
 

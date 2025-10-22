@@ -1,25 +1,43 @@
 # HXIS Integration Sandbox - NGEMR Development Environment
 
-## About
+## Overview
 
-The **HXIS Integration Sandbox** is a comprehensive development environment that provides a production-like mockup of Singapore's **National Group Electronic Medical Record (NGEMR)** system. This sandbox enables healthcare developers to build, test, and validate their FHIR-based integrations during **Proof-of-Concept (POC)** and **Proof-of-Value (POV)** phases without requiring direct access to production NGEMR systems.
+The **Next Generation Electronic Medical Record (NGEMR)** is Singapore’s national Electronic Medical Record platform, built on the Epic EMR system and used across public healthcare institutions. It is the backbone for safe, seamless, and coordinated patient care.
 
-### Why This Sandbox?
+As a live production system, integration with NGEMR follows a well-defined and governed process designed to uphold stability, security, and interoperability across the healthcare ecosystem.
+- It is guided by structured approval and review procedures that ensure all integrations meet operational and clinical standards.
+- It is supported by established governance frameworks to align with national healthcare policies and data protection requirements.
+- It operates on clear technical standards, including HL7, FHIR, and Epic interfaces, to maintain consistency and compatibility.
 
-NGEMR currently uses **EPIC APIs** for healthcare data exchange, but developers face challenges during the initial development phases:
+This structured approach safeguards the reliability of NGEMR while ensuring that any new integration delivers value, complies with standards, and supports the broader vision of a connected healthcare system.
 
-- **Limited Access**: Production NGEMR systems are restricted for security and compliance reasons
-- **POC Barriers**: Developers cannot easily test integration patterns without real data
-- **POV Challenges**: Demonstrating value propositions requires realistic healthcare scenarios
-- **Learning Curve**: Understanding EPIC FHIR API patterns requires hands-on experience
+To complement this process and facilitate early innovation, the **EMR Integration Sandbox** provides a production-like environment that simulates NGEMR, allowing innovators to:
 
-This sandbox solves these problems by providing:
-- **Production-like NGEMR data** with realistic patient demographics and medical histories
-- **EPIC-compatible FHIR API interfaces** that mirror production behavior
-- **Comprehensive healthcare scenarios** for testing various integration patterns
-- **Safe development environment** for learning and experimentation
+- **Experiment and test integrations** without risk to live operations.
+- **Validate and refine solutions early** using synthetic data and realistic workflows.
+- **Accelerate readiness** for NGEMR integration, reducing rework and delays.
 
-### Tech Stack Overview
+By bridging the gap between innovation and adoption, the EMR Integration Sandbox helps ideas move faster, safer, and more effectively into Singapore’s healthcare ecosystem.
+
+### Purpose
+
+The EMR Integration Sandbox is designed to:
+
+- Provide an overview of NGEMR and the pathway to integrate with it.
+- Offer a realistic EMR environment that simulates NGEMR for safe integration testing.
+- Enable innovators to trial solutions with production-like interfaces, building confidence before engaging the live system.
+
+### Playbook on EMR integration
+
+This Playbook serves as a practical guide for innovators, outlining the steps to move from idea to production:
+1. Introduction to NGEMR – Understanding the national EMR system and its importance.
+2. Testing integration in Sandbox – Hands-on testing with preloaded data and standardized protocols (HL7, FHIR).
+3. Integration using Epic APIs – Practical pathways using both open and vendor-supported services.
+4. Integration with NGEMR in Production – Considerations, processes, and case studies for scaling into the real EMR environment.
+
+For more details, visit **[Our Website](https://innovation.healthx.sg/integration-sandbox-overview)** to explore more information.
+
+## Tech Stack
 
 This sandbox utilizes modern web technologies optimized for healthcare development:
 
@@ -40,7 +58,7 @@ This sandbox is designed for:
 
 - **Healthcare Integration Developers** building NGEMR-connected applications
 - **POC/POV Teams** needing realistic data for demonstrations
-- **Healthcare IT Consultants** learning EPIC FHIR integration patterns
+- **Healthcare IT Consultants** learning Epic FHIR integration patterns
 - **Medical Software Vendors** developing NGEMR-compatible solutions
 - **Healthcare Startups** prototyping digital health solutions
 - **Training Organizations** teaching healthcare interoperability
@@ -54,7 +72,7 @@ This sandbox is designed for:
 3. [Environment Configuration](#3-environment-configuration)
 4. [FHIR Resource Coverage](#4-fhir-resource-coverage)
 5. [Development Workflow](#5-development-workflow)
-6. [EPIC API Compatibility](#6-epic-api-compatibility)
+6. [Epic API Compatibility](#6-Epic-api-compatibility)
 7. [Testing & Validation](#7-testing--validation)
 8. [Deployment Options](#8-deployment-options)
 9. [POC/POV Use Cases](#9-pocpov-use-cases)
@@ -114,11 +132,11 @@ The sandbox will be available at `http://localhost:3000` with a full NGEMR-like 
 - Authentic clinical terminologies (SNOMED CT, ICD-10, LOINC)
 - Multi-ethnic patient populations reflecting Singapore demographics
 
-#### 🔗 **EPIC API Interface Simulation**
-- FHIR R4 compliant endpoints matching EPIC patterns
+#### 🔗 **Epic API Interface Simulation**
+- FHIR R4 compliant endpoints matching Epic patterns
 - Realistic API response times and pagination
 - Authentication flows similar to production NGEMR
-- Error handling patterns consistent with EPIC systems
+- Error handling patterns consistent with Epic systems
 
 #### 🏢 **Multi-Tenant Healthcare Environment**
 - Simulated healthcare organizations and facilities
@@ -332,17 +350,17 @@ npm run format
 
 ---
 
-## 6. EPIC API Compatibility
+## 6. Epic API Compatibility
 
 ### API Response Patterns
 
-The sandbox mimics EPIC's specific FHIR implementation patterns:
+The sandbox mimics Epic's specific FHIR implementation patterns:
 
 ```typescript
-// EPIC-style Bundle response
+// Epic-style Bundle response
 {
   "resourceType": "Bundle",
-  "id": "epic-search-result",
+  "id": "Epic-search-result",
   "type": "searchset",
   "total": 150,
   "link": [
@@ -355,7 +373,7 @@ The sandbox mimics EPIC's specific FHIR implementation patterns:
     {
       "resource": {
         "resourceType": "Patient",
-        "id": "epic-patient-123",
+        "id": "Epic-patient-123",
         "identifier": [
           {
             "system": "urn:oid:2.16.840.1.113883.3.42.10001.100001.12",
@@ -372,9 +390,9 @@ The sandbox mimics EPIC's specific FHIR implementation patterns:
 ### Authentication Flow
 
 ```typescript
-// EPIC OAuth2 flow simulation
+// Epic OAuth2 flow simulation
 const authenticateWithEpic = async () => {
-  const response = await fetch('/auth/epic/authorize', {
+  const response = await fetch('/auth/Epic/authorize', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded'
@@ -387,7 +405,7 @@ const authenticateWithEpic = async () => {
 
 ### Search Parameters
 
-EPIC-compatible search patterns:
+Epic-compatible search patterns:
 ```typescript
 // Complex patient search
 const searchPatients = {
@@ -533,7 +551,7 @@ We welcome contributions that enhance the sandbox's realism and utility for NGEM
 #### **Priority Contribution Areas**
 - **New FHIR Resources** - Additional healthcare data types
 - **Singapore-Specific Patterns** - Local healthcare system nuances  
-- **EPIC API Updates** - Latest EPIC FHIR implementation patterns
+- **Epic API Updates** - Latest Epic FHIR implementation patterns
 - **Clinical Scenarios** - More realistic healthcare workflows
 - **Testing Utilities** - Enhanced validation and testing tools
 
@@ -571,10 +589,10 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## Support & Documentation
 
 - **Technical Support**: Open an issue on GitHub for technical questions
-- **Healthcare Integration Guidance**: Refer to FHIR R4 documentation and EPIC implementation guides
+- **Healthcare Integration Guidance**: Refer to FHIR R4 documentation and Epic implementation guides
 - **Training Materials**: Additional tutorials and examples available in `/docs` directory
 - **Community**: Join our healthcare developer community for best practices and collaboration
 
 ---
 
-*The HXIS Integration Sandbox is a development tool designed to accelerate NGEMR integration projects. It provides realistic healthcare data and EPIC-compatible APIs for safe development and testing environments.*
+*The HXIS Integration Sandbox is a development tool designed to accelerate NGEMR integration projects. It provides realistic healthcare data and Epic-compatible APIs for safe development and testing environments.*

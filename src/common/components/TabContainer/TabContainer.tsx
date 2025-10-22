@@ -68,7 +68,7 @@ const TabContainer: React.FC = () => {
   }
 
   return (
-    <div className="bg-gray-100 rounded-tl-lg min-h-full">
+    <div className="bg-gray-100 rounded-tl-lg h-full flex flex-col overflow-hidden">
       <Tabs
         type="editable-card"
         activeKey={activeTabId || undefined}
@@ -76,7 +76,7 @@ const TabContainer: React.FC = () => {
         onEdit={handleTabEdit}
         items={tabItems}
         hideAdd
-        className="h-full"
+        className="flex-1 flex flex-col"
         tabBarStyle={{
           margin: 0,
           paddingLeft: '16px',
@@ -88,8 +88,14 @@ const TabContainer: React.FC = () => {
       <style>{`
         .ant-tabs-content-holder {
           padding: 0;
-          height: calc(100vh - 120px);
-          overflow: auto;
+          flex: 1;
+          overflow: hidden;
+        }
+        .ant-tabs-content {
+          height: 100%;
+        }
+        .ant-tabs-tabpane {
+          height: 100%;
         }
       `}</style>
     </div>

@@ -16,7 +16,6 @@ import {
   Row,
   Space,
   Spin,
-  Tabs,
   Typography,
   message,
 } from 'antd';
@@ -36,7 +35,6 @@ const PatientListPage: React.FC = () => {
   const [selectedStatus] = useState<string>('all');
   const [isPatientModalOpen, setIsPatientModalOpen] = useState(false);
   const [editingPatient, setEditingPatient] = useState<Patient | null>(null);
-  const [activeTab, setActiveTab] = useState('my-patients');
   const [form] = Form.useForm();
 
   // Patient mutations
@@ -128,24 +126,24 @@ const PatientListPage: React.FC = () => {
   };
 
   return (
-    <div className="bg-[#cbeafe] p-4 rounded-tl-lg min-h-full">
+    <div className="bg-[#cbeafe] p-4 rounded-tl-lg h-full flex flex-col">
       {/* === EPIC-Style Header === */}
-      <div className="bg-white p-4 px-5 rounded-lg mb-4 shadow-lg">
+      <div className="bg-white p-2 px-4 rounded-lg mb-4 shadow-lg flex-shrink-0">
         <Row align="middle" justify="space-between">
           <Col>
-            <Title level={3} className="m-0 text-blue-900 text-xl">
+            <Title level={4} className="m-0 text-blue-900 text-base">
               <TeamOutlined /> Patient Lookup
             </Title>
-            <Text type="secondary" className="text-sm">
+            <Text type="secondary" className="text-xs">
               Search and manage patient records
             </Text>
           </Col>
           <Col>
             <Space>
-              <Button 
-                type="primary" 
+              <Button
+                type="primary"
                 icon={<UserAddOutlined />}
-                size="large"
+                size="middle"
                 onClick={handleNewPatient}
                 className="bg-green-500 border-green-500 hover:bg-green-600 hover:border-green-600"
               >
@@ -156,35 +154,14 @@ const PatientListPage: React.FC = () => {
         </Row>
       </div>
 
-      {/* === EPIC-Style Patient Tabs === */}
-      <div className="bg-white rounded-lg shadow-lg">
-        <Tabs
-          activeKey={activeTab}
-          onChange={setActiveTab}
-          size="large"
-          className="mx-5"
-          tabBarStyle={{ marginBottom: 0, borderBottom: '1px solid #d9d9d9' }}
-          items={[
-            {
-              key: 'my-patients',
-              label: (
-                <Space>
-                  Patient List
-                </Space>
-              ),
-              children: (
-                <div className="px-5 pb-5">
-                  <PatientTable 
-                    searchQuery={searchQuery}
-                    department={selectedDepartment}
-                    provider={selectedProvider}
-                    status={selectedStatus}
-                    onEditPatient={handleEditPatient}
-                  />
-                </div>
-              ),
-            },
-          ]}
+      {/* === Patient Table === */}
+      <div className="bg-white rounded-lg shadow-lg flex-1 flex flex-col overflow-hidden p-5">
+        <PatientTable
+          searchQuery={searchQuery}
+          department={selectedDepartment}
+          provider={selectedProvider}
+          status={selectedStatus}
+          onEditPatient={handleEditPatient}
         />
       </div>
 

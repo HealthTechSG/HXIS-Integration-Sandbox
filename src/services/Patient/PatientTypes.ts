@@ -66,6 +66,7 @@ export type GetPatientListRequest = {
   // Page
   page?: number;
   pageSize?: number;
+  count?: number;
 
   // Sort
   sortFields?: string[];

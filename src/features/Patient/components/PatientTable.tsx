@@ -34,12 +34,15 @@ const PatientTable: React.FC<PatientTableProps> = ({
 }) => {
   const { openPatientProfileTab } = useTabs();
   const [localSearchQuery, setLocalSearchQuery] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(20);
 
   // Fetch patients from external FHIR API
   const { data: patientListData, isLoading, error } = useGetPatientListQuery({
     search: searchQuery,
     page: 0,
-    pageSize: 100
+    pageSize: 100,
+    count: 100
   });
 
   // Delete patient mutation
@@ -259,9 +262,9 @@ const PatientTable: React.FC<PatientTableProps> = ({
   }
 
   return (
-    <div className='mt-4'>
+    <div className='mt-0 h-full flex flex-col'>
       {/* Search Input */}
-      <div className="flex justify-end mb-4">
+      <div className="flex justify-end mb-4 flex-shrink-0">
         <Input.Search
           placeholder="Search here..."
           allowClear
@@ -271,29 +274,33 @@ const PatientTable: React.FC<PatientTableProps> = ({
           className="w-80"
         />
       </div>
-      
-      <Table
-        columns={columns}
-        dataSource={filteredPatients}
-        pagination={{
-          pageSize: 20,
-          showSizeChanger: true,
-          showQuickJumper: true,
-          showTotal: (total, range) => 
-            `${range[0]}-${range[1]} of ${total} patients`,
-          className: 'text-xs'
-        }}
-        size="small"
-        scroll={{ y: 600 }}
-        rowClassName={() => 'patient-row-normal'}
-        className="text-xs"
-      />
 
-      {/* Results summary moved to bottom */}
-      <div className="mt-3 flex justify-between items-center">
-        <Text className="text-xs text-gray-400">
-          Last updated: {moment().format('MM/DD/YY h:mm A')}
-        </Text>
+      <div className="flex-1 overflow-hidden">
+        <Table
+          columns={columns}
+          dataSource={filteredPatients}
+          pagination={{
+            current: currentPage,
+            pageSize: pageSize,
+            showSizeChanger: true,
+            showQuickJumper: false,
+            pageSizeOptions: ['10', '20', '50', '100'],
+            showTotal: (total, range) =>
+              `${range[0]}-${range[1]} of ${total} patients`,
+            className: 'text-xs',
+            onChange: (page, newPageSize) => {
+              setCurrentPage(page);
+              if (newPageSize !== pageSize) {
+                setPageSize(newPageSize);
+                setCurrentPage(1);
+              }
+            },
+          }}
+          size="small"
+          scroll={{ y: 'calc(100vh - 380px)' }}
+          rowClassName={() => 'patient-row-normal'}
+          className="text-xs"
+        />
       </div>
 
       <style>{`
@@ -301,13 +308,13 @@ const PatientTable: React.FC<PatientTableProps> = ({
           background-color: #f0f8ff !important;
         }
         .ant-table-tbody > tr > td {
-          padding: 8px 8px !important;
+          padding: 4px 8px !important;
         }
         .ant-table-thead > tr > th {
           background-color: #f0f8ff !important;
           font-weight: bold !important;
           font-size: 12px !important;
-          padding: 8px 8px !important;
+          padding: 4px 8px !important;
         }
       `}</style>
     </div>

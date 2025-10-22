@@ -17,7 +17,6 @@ import {
   Select,
   Space,
   Spin,
-  Tabs,
   Typography,
   message,
 } from 'antd';
@@ -57,7 +56,6 @@ const PractitionerListPage: React.FC = () => {
   const [selectedStatus] = useState<string>('all');
   const [isPractitionerModalOpen, setIsPractitionerModalOpen] = useState(false);
   const [editingPractitioner, setEditingPractitioner] = useState<Practitioner | null>(null);
-  const [activeTab, setActiveTab] = useState('my-practitioners');
   const [form] = Form.useForm();
 
   // Practitioner mutations
@@ -153,24 +151,24 @@ const PractitionerListPage: React.FC = () => {
   };
 
   return (
-    <div className="bg-[#cbeafe] p-4 rounded-tl-lg min-h-full">
+    <div className="bg-[#cbeafe] p-4 rounded-tl-lg h-full flex flex-col">
       {/* === EPIC-Style Header === */}
-      <div className="bg-white p-4 px-5 rounded-lg mb-4 shadow-lg">
+      <div className="bg-white p-2 px-4 rounded-lg mb-4 shadow-lg flex-shrink-0">
         <Row align="middle" justify="space-between">
           <Col>
-            <Title level={3} className="m-0 text-blue-900 text-xl">
+            <Title level={4} className="m-0 text-blue-900 text-base">
               <UserOutlined /> Practitioner Lookup
             </Title>
-            <Text type="secondary" className="text-sm">
+            <Text type="secondary" className="text-xs">
               Search and manage practitioner records
             </Text>
           </Col>
           <Col>
             <Space>
-              <Button 
-                type="primary" 
+              <Button
+                type="primary"
                 icon={<UserAddOutlined />}
-                size="large"
+                size="middle"
                 onClick={handleNewPractitioner}
                 className="bg-green-500 border-green-500 hover:bg-green-600 hover:border-green-600"
               >
@@ -181,35 +179,14 @@ const PractitionerListPage: React.FC = () => {
         </Row>
       </div>
 
-      {/* === EPIC-Style Practitioner Tabs === */}
-      <div className="bg-white rounded-lg shadow-lg">
-        <Tabs
-          activeKey={activeTab}
-          onChange={setActiveTab}
-          size="large"
-          className="mx-5"
-          tabBarStyle={{ marginBottom: 0, borderBottom: '1px solid #d9d9d9' }}
-          items={[
-            {
-              key: 'my-practitioners',
-              label: (
-                <Space>
-                  Practitioner List
-                </Space>
-              ),
-              children: (
-                <div className="px-5 pb-5">
-                  <PractitionerTable 
-                    searchQuery={searchQuery}
-                    department={selectedDepartment}
-                    specialty={selectedSpecialty}
-                    status={selectedStatus}
-                    onEditPractitioner={handleEditPractitioner}
-                  />
-                </div>
-              ),
-            },
-          ]}
+      {/* === Practitioner Table === */}
+      <div className="bg-white rounded-lg shadow-lg flex-1 flex flex-col overflow-hidden p-5">
+        <PractitionerTable
+          searchQuery={searchQuery}
+          department={selectedDepartment}
+          specialty={selectedSpecialty}
+          status={selectedStatus}
+          onEditPractitioner={handleEditPractitioner}
         />
       </div>
 

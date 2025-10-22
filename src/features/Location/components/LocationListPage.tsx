@@ -15,7 +15,6 @@ import {
   Select,
   Space,
   Spin,
-  Tabs,
   Typography,
   message,
 } from 'antd';
@@ -35,7 +34,6 @@ const LocationListPage: React.FC = () => {
   const [selectedPhysicalType] = useState<string>('all');
   const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
   const [editingLocation, setEditingLocation] = useState<Location | null>(null);
-  const [activeTab, setActiveTab] = useState('location-list');
   const [form] = Form.useForm();
 
   // Location mutations
@@ -152,25 +150,25 @@ const LocationListPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-full rounded-tl-lg bg-[#cbeafe] p-4">
+    <div className="h-full flex flex-col rounded-tl-lg bg-[#cbeafe] p-4">
       {/* === EPIC-Style Header === */}
-      <div className="mb-4 rounded-lg bg-white p-4 px-5 shadow-lg">
+      <div className="mb-4 rounded-lg bg-white p-2 px-4 shadow-lg flex-shrink-0">
         <Row align="middle" justify="space-between">
           <Col>
-            <Title className="m-0 text-xl text-blue-900" level={3}>
+            <Title className="m-0 text-base text-blue-900" level={4}>
               <EnvironmentOutlined /> Location Lookup
             </Title>
-            <Text className="text-sm" type="secondary">
+            <Text className="text-xs" type="secondary">
               Search and manage healthcare location records
             </Text>
           </Col>
           <Col>
             <Space>
-              <Button 
-                className="border-green-500 bg-green-500 hover:border-green-600 hover:bg-green-600" 
+              <Button
+                className="border-green-500 bg-green-500 hover:border-green-600 hover:bg-green-600"
                 icon={<PlusOutlined />}
                 onClick={handleNewLocation}
-                size="large"
+                size="middle"
                 type="primary"
               >
                 New Location
@@ -180,35 +178,14 @@ const LocationListPage: React.FC = () => {
         </Row>
       </div>
 
-      {/* === EPIC-Style Location Tabs === */}
-      <div className="rounded-lg bg-white shadow-lg">
-        <Tabs
-          activeKey={activeTab}
-          className="mx-5"
-          items={[
-            {
-              key: 'location-list',
-              label: (
-                <Space>
-                  Location List
-                </Space>
-              ),
-              children: (
-                <div className="px-5 pb-5">
-                  <LocationTable 
-                    onEditLocation={handleEditLocation}
-                    physicalType={selectedPhysicalType}
-                    searchQuery={searchQuery}
-                    status={selectedStatus}
-                    type={selectedType}
-                  />
-                </div>
-              ),
-            },
-          ]}
-          onChange={setActiveTab}
-          size="large"
-          tabBarStyle={{ marginBottom: 0, borderBottom: '1px solid #d9d9d9' }}
+      {/* === Location Table === */}
+      <div className="rounded-lg bg-white shadow-lg flex-1 flex flex-col overflow-hidden p-5">
+        <LocationTable
+          onEditLocation={handleEditLocation}
+          physicalType={selectedPhysicalType}
+          searchQuery={searchQuery}
+          status={selectedStatus}
+          type={selectedType}
         />
       </div>
 

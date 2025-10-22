@@ -144,6 +144,7 @@ export interface GetPractitionerListParams {
   search?: string;
   page?: number;
   pageSize?: number;
+  count?: number;
   active?: boolean;
   specialty?: string;
 }
