@@ -280,20 +280,3 @@ COPY dist ./dist
 EXPOSE 3000
 CMD ["npm", "run", "preview"]
 ```
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
-## Support & Documentation
-
-- **Technical Support**: Open an issue on GitHub for technical questions
-- **Healthcare Integration Guidance**: Refer to FHIR documentation and Epic implementation guides
-- **Training Materials**: Additional tutorials and examples available in `/docs` directory
-- **Community**: Join our healthcare developer community for best practices and collaboration
-
----
-
-*The HXIS Integration Sandbox is a development tool designed to accelerate NGEMR integration projects. It provides realistic healthcare data and Epic-compatible APIs for safe development and testing environments.*
